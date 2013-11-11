@@ -1,0 +1,75 @@
+[INFO] Scanning for projects...
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building algorithms 1.0.0
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] >>> exec-maven-plugin:1.2.1:java (default-cli) @ algorithms >>>
+[INFO] 
+[INFO] <<< exec-maven-plugin:1.2.1:java (default-cli) @ algorithms <<<
+[INFO] 
+[INFO] --- exec-maven-plugin:1.2.1:java (default-cli) @ algorithms ---
+INFO  Main - Starting A* search from Missionary and Cannibals...
+INFO  AStarSearch - Current state: ((3, 3, LeftBank, 0, 0))
+INFO  AStarSearch - Evaluating state: ((3, 3, LeftBank, 0, 0)) with h(x): 6.0
+INFO  MCNode - Determining states to move from (((3, 3, LeftBank, 0, 0)))
+INFO  MCNode - valid state ==> (((3, 1, RightBank, 0, 2)))
+INFO  MCNode - valid state ==> (((2, 2, RightBank, 1, 1)))
+INFO  MCNode - valid state ==> (((3, 2, RightBank, 0, 1)))
+INFO  AStarSearch - Current state: ((2, 2, RightBank, 1, 1))
+INFO  AStarSearch - Evaluating state: ((2, 2, RightBank, 1, 1)) with h(x): 5.0
+INFO  MCNode - Determining states to move from (((2, 2, RightBank, 1, 1)))
+INFO  MCNode - valid state ==> (((3, 3, LeftBank, 0, 0)))
+INFO  MCNode - valid state ==> (((3, 2, LeftBank, 0, 1)))
+INFO  AStarSearch - Current state: ((3, 1, RightBank, 0, 2))
+INFO  AStarSearch - Evaluating state: ((3, 1, RightBank, 0, 2)) with h(x): 5.0
+INFO  MCNode - Determining states to move from (((3, 1, RightBank, 0, 2)))
+INFO  MCNode - valid state ==> (((3, 3, LeftBank, 0, 0)))
+INFO  MCNode - valid state ==> (((3, 2, LeftBank, 0, 1)))
+INFO  AStarSearch - Current state: ((3, 2, LeftBank, 0, 1))
+INFO  AStarSearch - Evaluating state: ((3, 2, LeftBank, 0, 1)) with h(x): 7.0
+INFO  MCNode - Determining states to move from (((3, 2, LeftBank, 0, 1)))
+INFO  MCNode - valid state ==> (((3, 0, RightBank, 0, 3)))
+INFO  MCNode - valid state ==> (((3, 1, RightBank, 0, 2)))
+INFO  MCNode - valid state ==> (((2, 2, RightBank, 1, 1)))
+INFO  AStarSearch - Current state: ((3, 0, RightBank, 0, 3))
+INFO  AStarSearch - Evaluating state: ((3, 0, RightBank, 0, 3)) with h(x): 6.0
+INFO  MCNode - Determining states to move from (((3, 0, RightBank, 0, 3)))
+INFO  MCNode - valid state ==> (((3, 2, LeftBank, 0, 1)))
+INFO  MCNode - valid state ==> (((3, 1, LeftBank, 0, 2)))
+INFO  AStarSearch - Current state: ((3, 1, LeftBank, 0, 2))
+INFO  AStarSearch - Evaluating state: ((3, 1, LeftBank, 0, 2)) with h(x): 8.0
+INFO  MCNode - Determining states to move from (((3, 1, LeftBank, 0, 2)))
+INFO  MCNode - valid state ==> (((1, 1, RightBank, 2, 2)))
+INFO  MCNode - valid state ==> (((3, 0, RightBank, 0, 3)))
+INFO  AStarSearch - Current state: ((1, 1, RightBank, 2, 2))
+INFO  AStarSearch - Evaluating state: ((1, 1, RightBank, 2, 2)) with h(x): 7.0
+INFO  MCNode - Determining states to move from (((1, 1, RightBank, 2, 2)))
+INFO  MCNode - valid state ==> (((3, 1, LeftBank, 0, 2)))
+INFO  MCNode - valid state ==> (((2, 2, LeftBank, 1, 1)))
+INFO  AStarSearch - Current state: ((2, 2, LeftBank, 1, 1))
+INFO  AStarSearch - Evaluating state: ((2, 2, LeftBank, 1, 1)) with h(x): 10.0
+INFO  MCNode - Determining states to move from (((2, 2, LeftBank, 1, 1)))
+INFO  MCNode - valid state ==> (((0, 2, RightBank, 3, 1)))
+INFO  MCNode - valid state ==> (((1, 1, RightBank, 2, 2)))
+INFO  AStarSearch - Current state: ((0, 2, RightBank, 3, 1))
+INFO  AStarSearch - Evaluating state: ((0, 2, RightBank, 3, 1)) with h(x): 9.0
+INFO  MCNode - Determining states to move from (((0, 2, RightBank, 3, 1)))
+INFO  MCNode - valid state ==> (((2, 2, LeftBank, 1, 1)))
+INFO  MCNode - valid state ==> (((0, 3, LeftBank, 3, 0)))
+INFO  AStarSearch - Current state: ((0, 3, LeftBank, 3, 0))
+INFO  AStarSearch - Evaluating state: ((0, 3, LeftBank, 3, 0)) with h(x): 11.0
+INFO  MCNode - Determining states to move from (((0, 3, LeftBank, 3, 0)))
+INFO  MCNode - valid state ==> (((0, 1, RightBank, 3, 2)))
+INFO  MCNode - valid state ==> (((0, 2, RightBank, 3, 1)))
+INFO  AStarSearch - Current state: ((0, 1, RightBank, 3, 2))
+INFO  AStarSearch - Evaluating state: ((0, 1, RightBank, 3, 2)) with h(x): 10.0
+INFO  MCNode - Determining states to move from (((0, 1, RightBank, 3, 2)))
+INFO  MCNode - valid state ==> (((0, 3, LeftBank, 3, 0)))
+INFO  MCNode - valid state ==> (((0, 2, LeftBank, 3, 1)))
+INFO  MCNode - valid state ==> (((1, 1, LeftBank, 2, 2)))
+INFO  AStarSearch - Current state: ((1, 1, LeftBank, 2, 2))
+INFO  AStarSearch - Evaluating state: ((1, 1, LeftBank, 2, 2)) with h(x): 12.0
+INFO  MCNode - Determining states to move from (((1, 1, LeftBank, 2, 2)))
+INFO  MCNode - valid state ==> (((0, 0, RightBank, 3, 3)))
+INFO  MCNode - valid state ==> (((0, 1, RightBank, 3, 2)))
