@@ -19,6 +19,7 @@ public class Main {
 	
 	public static void main(String... args) {
 		LOGGER.info("Starting A* search from Missionary and Cannibals...");
+		LOGGER.info("State space expressed as (left missionaries, left cannibals, bank, right missionaries, right cannibals)");
 		
 		State initial = new State(BoatOrientation.LeftBank, 3, 3, 0, 0);
 		
