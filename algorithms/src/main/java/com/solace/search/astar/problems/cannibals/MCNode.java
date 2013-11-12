@@ -145,7 +145,7 @@ public class MCNode extends AStarNode<State, MCNode> {
 	 */
 	@Override
 	public double calculateCost() {
-		return getDepth() + calculateH();
+		return calculateG() + calculateH();
 	}
 
 	/**
