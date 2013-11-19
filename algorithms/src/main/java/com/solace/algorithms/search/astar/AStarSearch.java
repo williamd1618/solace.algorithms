@@ -12,6 +12,7 @@ import java.util.Stack;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.solace.algorithms.search.Search;
 import com.solace.graph.Node;
 
 
@@ -23,7 +24,7 @@ import com.solace.graph.Node;
  * @param <T>
  * @param <NodeType>
  */
-public class AStarSearch<T, NodeType extends AStarNode<T, NodeType>> {
+public class AStarSearch<T, NodeType extends AStarNode<T, NodeType>> extends Search<T, NodeType> {
 
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(AStarSearch.class);
@@ -50,6 +51,7 @@ public class AStarSearch<T, NodeType extends AStarNode<T, NodeType>> {
 	 * 
 	 * @return
 	 */
+	@Override
 	public NodeType search() {
 
 		NodeType current = null;

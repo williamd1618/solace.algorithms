@@ -15,11 +15,11 @@ package com.solace.graph;
  */
 public abstract class Node<ValueType> {
 
-	private ValueType value;
+	protected ValueType value;
 
-	private int depth;
+	protected int depth;
 
-	private Node<ValueType> parent;
+	protected Node<ValueType> parent;
 
 	public Node(ValueType t) {
 		this(null, t, 0);
