@@ -1,8 +1,17 @@
 package com.solace.search.minimax.problems.tictactoe;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 import com.solace.algorithms.search.minimax.MiniMaxNode;
 import com.solace.graph.Adjacency;
 import com.solace.graph.Node;
@@ -14,12 +23,15 @@ import com.solace.search.minimax.problems.tictactoe.Board.Player;
  * Represents a node in a graph of a TicTacToe move. In this, the node itself,
  * has a State. This state represents the state at that point in the graph. The
  * game logic for detecting a win, or not win for that matter, is help in this
- * classes {@link #isWin()} functionality.
+ * classes {@link #containsWin()} functionality.
  * 
  * @author <a href="mailto:daniel.williams@gmail.com">Daniel Williams</a>
  * 
  */
 public class TicTacToeNode extends MiniMaxNode<State, TicTacToeNode> {
+
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(TicTacToeNode.class);
 
 	public TicTacToeNode(Node<State> parent, State t) {
 		super(parent, t);
@@ -44,10 +56,17 @@ public class TicTacToeNode extends MiniMaxNode<State, TicTacToeNode> {
 
 		int o_poss_wins = calculatePossibleWins(Player.O);
 
+		double h = 0.0d;
+
 		if (getValue().getPlayer() == Player.X)
-			return x_poss_wins - o_poss_wins;
+			h = x_poss_wins - o_poss_wins;
 		else
-			return o_poss_wins - x_poss_wins;
+			h = o_poss_wins - x_poss_wins;
+
+		LOGGER.info("h(x) for \n{} calculated as {}", getValue().getBoard()
+				.toString(), h);
+
+		return h;
 	}
 
 	/**
@@ -65,16 +84,18 @@ public class TicTacToeNode extends MiniMaxNode<State, TicTacToeNode> {
 		Board b = getValue().getBoard();
 
 		for (int[] idx : Board.Indices.DIAGNOAL) {
-			total += analyzeIndices(p, piece, idx) ? 1 : 0;
+			total += analyzeForWins(p, piece, idx) ? 1 : 0;
 		}
 
 		for (int[] idx : Board.Indices.HORIZONTAL) {
-			total += analyzeIndices(p, piece, idx) ? 1 : 0;
+			total += analyzeForWins(p, piece, idx) ? 1 : 0;
 		}
 
 		for (int[] idx : Board.Indices.VERTICAL) {
-			total += analyzeIndices(p, piece, idx) ? 1 : 0;
+			total += analyzeForWins(p, piece, idx) ? 1 : 0;
 		}
+
+		LOGGER.info("Player: {} calculated wins: {}", p.name(), total);
 
 		return total;
 	}
@@ -83,7 +104,7 @@ public class TicTacToeNode extends MiniMaxNode<State, TicTacToeNode> {
 	 * Will check to see if if the node's {@link State}
 	 */
 	@Override
-	public boolean isWin() {
+	public boolean containsWin() {
 		boolean isWin = false;
 
 		int total = 0;
@@ -95,24 +116,53 @@ public class TicTacToeNode extends MiniMaxNode<State, TicTacToeNode> {
 		Piece piece = p == Player.X ? Piece.X : Piece.O;
 
 		for (int[] idx : Board.Indices.DIAGNOAL) {
-			isWin = analyzeIndices(p, piece, idx);
+			isWin = isWin(p, piece, idx);
 		}
 
 		if (!isWin)
 			for (int[] idx : Board.Indices.HORIZONTAL) {
-				isWin = analyzeIndices(p, piece, idx);
+				isWin = isWin(p, piece, idx);
 			}
 		else
 			return isWin;
 
 		if (!isWin)
 			for (int[] idx : Board.Indices.VERTICAL) {
-				isWin = analyzeIndices(p, piece, idx);
+				isWin = isWin(p, piece, idx);
 			}
 		else
 			return isWin;
 
+		LOGGER.info("\n{} {} as a win for {}", getValue().getBoard().toString(),
+				isWin ? "identified" : "not identified", p.name());
+
 		return isWin;
+	}
+	
+	
+	private boolean isWin(Player p, final Piece piece, int[] line) {
+		if (line.length != 3)
+			throw new RuntimeException(
+					"inappropriate set of indices for board map!");
+
+		boolean win = false;
+
+		Board board = getValue().getBoard();
+		
+		List<Piece> pieces = new ArrayList<Piece>();
+		
+		for(int idx : line) 
+			pieces.add(board.at(idx));
+		
+		Piece result = Iterables.find(pieces, new Predicate<Piece>() {
+
+			public boolean apply(Piece arg0) {
+				return piece != arg0;
+			}			
+		});
+		
+		// if p == null then we have a win.
+		return result == null;
 	}
 
 	/**
@@ -120,27 +170,26 @@ public class TicTacToeNode extends MiniMaxNode<State, TicTacToeNode> {
 	 * 
 	 * @param p
 	 * @param idx
-	 * @return
+	 * @return true if the line of indices does not contain an opposing piece
 	 */
-	private boolean analyzeIndices(Player p, Piece piece, int[] idx) {
-		if (idx.length != 3)
+	private boolean analyzeForWins(Player p, Piece piece, int[] line) {
+		if (line.length != 3)
 			throw new RuntimeException(
 					"inappropriate set of indices for board map!");
 
 		boolean possWin = false;
 
 		Board board = getValue().getBoard();
-
-		for (int i = 0; i < idx.length; i++) {
-			int index = idx[i];
-			if (board.at(index) != piece && board.at(index) != Piece.Empty)
-				continue;
-			else if (index == idx.length - 1
-					&& (board.at(index) == piece || board.at(index) == Piece.Empty))
-				possWin = true;
+		
+		Piece opponent = piece == Piece.X ? Piece.O : Piece.X;
+		
+		List<Piece> placements = new ArrayList<Piece>();
+		
+		for(int idx : line) {
+			placements.add(board.at(idx));
 		}
-
-		return possWin;
+		
+		return !placements.contains(opponent);
 	}
 
 	/**
@@ -166,7 +215,21 @@ public class TicTacToeNode extends MiniMaxNode<State, TicTacToeNode> {
 
 		Board board = getValue().getBoard();
 
+		for (int i = Board.MIN_POS; i <= Board.MAX_POS; i++) {
+			Board b = new Board(board);
+
+			if (b.place(pieceToPlay, i)) {
+				TicTacToeNode node = new TicTacToeNode(this, new State(b,
+						toGenerate, !getValue().isMax(), getDepth() - 1));
+				nodes.add(node);
+				
+				node.setParent(this);
+			}
+		}
+
+		adjacency.setNeighbors(nodes);
 		
+		LOGGER.info("Generated {} possible moves for {}", nodes.size(), toGenerate.name());
 
 		return adjacency;
 	}

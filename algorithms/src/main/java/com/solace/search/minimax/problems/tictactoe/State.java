@@ -2,51 +2,51 @@ package com.solace.search.minimax.problems.tictactoe;
 
 import com.solace.search.minimax.problems.tictactoe.Board.Player;
 
-
 /**
  * State for TicTacToe
+ * 
  * @author <a href="mailto:daniel.williams@gmail.com">Daniel Williams</a>
- *
+ * 
  */
 public class State {
-	
+
 	private Board board;
-	
+
 	private Player player;
-	
+
 	private boolean isMax;
-	
+
 	private int depth;
-	
-	
+
 	/**
 	 * Will default to {@link Board#IDEAL_START}
 	 */
 	public State() {
 		this(Board.IDEAL_START);
 	}
-	
+
 	/**
 	 * Will default to player X
+	 * 
 	 * @param board
 	 */
 	public State(Board board) {
 		this(board, Player.X, true, 0);
 	}
-	
+
 	/**
 	 * Will default to {@link Board#IDEAL_START} and Max's move
+	 * 
 	 * @param player
 	 * @param isMax
 	 */
 	public State(Player player, boolean isMax) {
 		this(Board.IDEAL_START, player, isMax, 0);
 	}
-	
-	
 
 	/**
 	 * Allows all to be passed in
+	 * 
 	 * @param board
 	 * @param player
 	 * @param isMax
@@ -57,7 +57,7 @@ public class State {
 		this.isMax = isMax;
 		this.depth = depth;
 	}
-	
+
 	public Board getBoard() {
 		return board;
 	}
@@ -88,5 +88,11 @@ public class State {
 
 	public void setDepth(int depth) {
 		this.depth = depth;
+	}
+
+	@Override
+	public String toString() {
+		return String.format("player: %s, depth: %d, board: \n%s",
+				player.name(), depth, board.toString());
 	}
 }

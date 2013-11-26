@@ -49,5 +49,5 @@ public abstract class MiniMaxNode<ValueType, NodeType extends Node<ValueType>> e
 		this.alpha = alpha;
 	}
 	
-	public abstract boolean isWin();
+	public abstract boolean containsWin();
 }

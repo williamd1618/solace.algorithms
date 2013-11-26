@@ -3,6 +3,7 @@ package com.solace.algorithms.search.minimax;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Strings;
 import com.solace.algorithms.search.Search;
 
 /**
@@ -19,8 +20,9 @@ import com.solace.algorithms.search.Search;
  */
 public class MiniMaxSearch<T, NodeType extends MiniMaxNode<T, NodeType>>
 		extends Search<T, NodeType> {
-	
-	private static final Logger LOGGER = LoggerFactory.getLogger(MiniMaxSearch.class);
+
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(MiniMaxSearch.class);
 
 	private NodeType startState;
 	private int depth;
@@ -34,11 +36,14 @@ public class MiniMaxSearch<T, NodeType extends MiniMaxNode<T, NodeType>>
 
 	@Override
 	public NodeType search() {
-		return minimax(startState, 3, true);
+		return minimax(startState, depth, true);
 	}
 
-	private NodeType minimax(NodeType node, int depth, boolean maximizing) {
-		if (depth == 0 || node.isWin())
+	private NodeType minimax(NodeType node, int depth, boolean maximizing) {		
+		LOGGER.info("{}Initiating minimax search as {} with a depth of {}{}", Strings.repeat("=", 10),
+				maximizing ? "MAX" : "MIN", depth, Strings.repeat("=", 10));
+
+		if (depth == 0 || node.containsWin())
 			return node;
 
 		if (maximizing) {
@@ -46,30 +51,32 @@ public class MiniMaxSearch<T, NodeType extends MiniMaxNode<T, NodeType>>
 
 			for (NodeType child : node.generateAdjacency().getNeighbors()) {
 				NodeType val = minimax(child, depth - 1, false);
-								
-				best = (int) (best > val.calculateCost() ? best : val.calculateCost());
-				
-				if ( best <= val.getAlpha() ) {
-					LOGGER.info("beta cutoff identified for {}", val);
+
+				best = (int) (best > val.calculateCost() ? best : val
+						.calculateCost());
+
+				if (best <= val.getAlpha()) {
+					LOGGER.info("beta cutoff identified for \n{}", val.getValue().toString());
 					break;
 				}
 			}
-			
+
 			node.setAlpha(best);
 		} else {
 			int best = Integer.MAX_VALUE;
 
 			for (NodeType child : node.generateAdjacency().getNeighbors()) {
 				NodeType val = minimax(child, depth - 1, true);
-				
-				best = (int) (best < val.calculateCost() ? best : val.calculateCost());
-				
-				if ( best <= val.getAlpha() ) {
+
+				best = (int) (best < val.calculateCost() ? best : val
+						.calculateCost());
+
+				if (best <= val.getAlpha()) {
 					LOGGER.info("beta cutoff identified for {}", val);
 					break;
-				}				
+				}
 			}
-			
+
 			node.setAlpha(best);
 		}
 
