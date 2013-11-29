@@ -1,8 +1,10 @@
 package com.solace.search.minimax.problems.chess.moves;
 
 import com.solace.search.minimax.problems.chess.Board;
+import com.solace.search.minimax.problems.chess.GamePiece;
 import com.solace.search.minimax.problems.chess.Piece;
 import com.solace.search.minimax.problems.chess.Placement;
+import com.solace.search.minimax.problems.chess.Player;
 
 /**
  * This move implementation is based upon the problem set given as extra credit
@@ -19,24 +21,66 @@ public class PawnMove extends Move {
 		// TODO Auto-generated constructor stub
 	}
 
+	/**
+	 * Will evaluate moves forward, attacks, and Queening
+	 * <p>
+	 * Note: may need to take into account index boundaries of 0 and 7 for edges
+	 * on potential attacks
+	 */
 	@Override
-	public void execute(Board board) throws MoveException {
-		
-		if ( from.getBoardLocation().getX() == to.getBoardLocation().getX() ) {
-			if ( Math.abs(from.getBoardLocation().getX() - to.getBoardLocation().getX()) == 1 && !board.isOccupied(to.getBoardLocation())) {
+	public void doExecute(Board board) throws MoveException {
+
+		if (from.getBoardLocation().getFile() == to.getBoardLocation()
+				.getFile()) {
+			if (Math.abs(from.getBoardLocation().getRank()
+					- to.getBoardLocation().getRank()) == 1
+					&& !board.isOccupied(to.getBoardLocation())) {
 				board.place(piece, to.getBoardLocation());
 			}
-		} else if ( Math.abs(from.getBoardLocation().getX() - to.getBoardLocation().getX()) == 1 &&
-				Math.abs(from.getBoardLocation().getY() - to.getBoardLocation().getY()) == 1 &&
-				board.isOccupied(to.getBoardLocation())) {
-			
+		} else if (Math.abs(from.getBoardLocation().getRank()
+				- to.getBoardLocation().getRank()) == 1
+				&& Math.abs(from.getBoardLocation().getFile()
+						- to.getBoardLocation().getFile()) == 1
+				&& board.isOccupied(to.getBoardLocation())) {
+
 			board.place(piece, to.getBoardLocation());
+
+			// if this player has make it to the opponents first rank
+			// then the pawn can be promoted to a queen.
+			Player opponent = piece.getPlayer().getOpponent();
+
+			if (opponent.getFirstRankIndex() == to.getBoardLocation().getRank())
+				board.place(new Piece(GamePiece.Queen, piece.getPlayer()),
+						to.getBoardLocation());
 		}
 	}
 
 	@Override
-	public boolean isCheck() {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean isCheck(Board board) {
+		boolean isCheck = false;
+
+		int rank = to.getBoardLocation().getRank();
+		int file = to.getBoardLocation().getFile();
+
+		// if the player is black
+		if (piece.getPlayer() == Player.Black) {
+			isCheck = isKing(board, rank - 1, file - 1, piece.getPlayer()
+					.getOpponent())
+					|| isKing(board, rank + 1, file - 1, piece.getPlayer()
+							.getOpponent());
+		} else if (piece.getPlayer() == Player.White) {
+			isCheck = isKing(board, rank - 1, file - 1, piece.getPlayer()
+					.getOpponent())
+					|| isKing(board, rank + 1, file - 1, piece.getPlayer()
+							.getOpponent());
+		}
+
+		return isCheck;
+	}
+
+	public boolean isKing(Board board, int file, int rank, Player p) {
+		Piece piece = board.getPieces()[file][rank];
+
+		return piece.getPiece() == GamePiece.King && piece.getPlayer() == p;
 	}
 }

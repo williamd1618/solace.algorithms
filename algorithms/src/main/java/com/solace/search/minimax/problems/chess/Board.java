@@ -5,6 +5,14 @@ import org.slf4j.LoggerFactory;
 
 import com.solace.search.minimax.problems.chess.moves.Move;
 
+/**
+ * Board structure is indexed by rank first Piece[rank:0-7][file:0-7]
+ * 
+ * [1][1] [0][1]
+ * 
+ * @author <a href="mailto:daniel.williams@gmail.com">Daniel Williams</a>
+ * 
+ */
 public class Board {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Board.class);
@@ -30,31 +38,31 @@ public class Board {
 			for (int j = 0; j < 8; j++)
 				DEFAULT_LAYOUT[i][j] = new Piece(GamePiece.Empty, Player.All);
 
-		// setup pawns on opposing sides (row 2 and 7 0 indexed)
+		// setup pawns on opposing sides (row 2 and 7, 0 indexed)
 		for (int i = 0; i < 8; i++) {
-			DEFAULT_LAYOUT[i][1] = new Piece(GamePiece.Pawn, Player.White);
-			DEFAULT_LAYOUT[i][6] = new Piece(GamePiece.Pawn, Player.Black);
+			DEFAULT_LAYOUT[1][i] = new Piece(GamePiece.Pawn, Player.White);
+			DEFAULT_LAYOUT[6][i] = new Piece(GamePiece.Pawn, Player.Black);
 		}
 
 		// other white pieces
-		DEFAULT_LAYOUT[0][0] = DEFAULT_LAYOUT[7][0] = new Piece(GamePiece.Rook,
+		DEFAULT_LAYOUT[0][0] = DEFAULT_LAYOUT[0][7] = new Piece(GamePiece.Rook,
 				Player.White);
-		DEFAULT_LAYOUT[1][0] = DEFAULT_LAYOUT[6][0] = new Piece(GamePiece.Knight,
-				Player.White);
-		DEFAULT_LAYOUT[2][0] = DEFAULT_LAYOUT[5][0] = new Piece(GamePiece.Bishop,
-				Player.White);
-		DEFAULT_LAYOUT[3][0] = new Piece(GamePiece.Queen, Player.White);
-		DEFAULT_LAYOUT[4][0] = new Piece(GamePiece.King, Player.White);
+		DEFAULT_LAYOUT[0][1] = DEFAULT_LAYOUT[0][6] = new Piece(
+				GamePiece.Knight, Player.White);
+		DEFAULT_LAYOUT[0][2] = DEFAULT_LAYOUT[0][5] = new Piece(
+				GamePiece.Bishop, Player.White);
+		DEFAULT_LAYOUT[0][3] = new Piece(GamePiece.Queen, Player.White);
+		DEFAULT_LAYOUT[0][4] = new Piece(GamePiece.King, Player.White);
 
 		// other black pieces
-		DEFAULT_LAYOUT[0][7] = DEFAULT_LAYOUT[7][7] = new Piece(GamePiece.Rook,
+		DEFAULT_LAYOUT[7][0] = DEFAULT_LAYOUT[7][7] = new Piece(GamePiece.Rook,
 				Player.Black);
-		DEFAULT_LAYOUT[1][7] = DEFAULT_LAYOUT[6][7] = new Piece(GamePiece.Knight,
-				Player.Black);
-		DEFAULT_LAYOUT[2][7] = DEFAULT_LAYOUT[5][7] = new Piece(GamePiece.Bishop,
-				Player.Black);
-		DEFAULT_LAYOUT[3][7] = new Piece(GamePiece.Queen, Player.Black);
-		DEFAULT_LAYOUT[4][7] = new Piece(GamePiece.King, Player.Black);
+		DEFAULT_LAYOUT[7][1] = DEFAULT_LAYOUT[7][6] = new Piece(
+				GamePiece.Knight, Player.Black);
+		DEFAULT_LAYOUT[7][2] = DEFAULT_LAYOUT[7][5] = new Piece(
+				GamePiece.Bishop, Player.Black);
+		DEFAULT_LAYOUT[7][3] = new Piece(GamePiece.Queen, Player.Black);
+		DEFAULT_LAYOUT[7][4] = new Piece(GamePiece.King, Player.Black);
 
 	}
 
@@ -124,12 +132,13 @@ public class Board {
 			Player opponent = piece.getPlayer() == Player.White ? Player.Black
 					: Player.White;
 
-			Piece target = board[placement.getX()][placement.getY()];
+			Piece target = board[placement.getRank()][placement.getFile()];
 
 			if (target.getPiece() != GamePiece.Empty
 					&& target.getPlayer() == opponent) {
 				LOGGER.info("{} has capture a {}", piece.getPlayer(),
-						board[placement.getX()][placement.getY()].getPiece());
+						board[placement.getRank()][placement.getFile()]
+								.getPiece());
 
 				if (target.getPiece() == GamePiece.King) {
 					LOGGER.info("checkmate identified for {}",
@@ -137,7 +146,7 @@ public class Board {
 					checkmate = true;
 				}
 
-				board[placement.getX()][placement.getY()] = piece;
+				board[placement.getRank()][placement.getFile()] = piece;
 			} else {
 				LOGGER.info("placing a {} for {} at {}", piece.getPiece(),
 						piece.getPlayer(), placement);
@@ -156,7 +165,7 @@ public class Board {
 	 * @return
 	 */
 	public boolean isOccupied(BoardLocation placement) {
-		return board[placement.getX()][placement.getY()].getPiece() != GamePiece.Empty;
+		return board[placement.getRank()][placement.getFile()].getPiece() != GamePiece.Empty;
 	}
 
 	public static Board factoryEmptyBoard() {

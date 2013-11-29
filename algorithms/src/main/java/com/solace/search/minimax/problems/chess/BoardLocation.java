@@ -1,7 +1,9 @@
 package com.solace.search.minimax.problems.chess;
 
 /**
- * A representation of classic board placement
+ * A representation of classic board placement as rank x file indexed
+ * <p>
+ * Rank references A...H. File references 1...8
  * 
  * @author <a href="mailto:daniel.williams@gmail.com">Daniel Williams</a>
  * 
@@ -19,18 +21,36 @@ public enum BoardLocation {
 			7, 0), B8(7, 1), C8(7, 2), D8(7, 3), E8(7, 4), F8(7, 4), G8(7, 6), H8(
 			7, 7);
 
-	private int x, y;
+	private int rank, file;
 
-	private BoardLocation(int x, int y) {
-		this.x = x;
-		this.y = y;
+	private BoardLocation(int rank, int file) {
+		this.rank = rank;
+		this.file = file;
 	}
 
-	public int getX() {
-		return x;
+	public int getRank() {
+		return rank;
 	}
 
-	public int getY() {
-		return y;
+	public int getFile() {
+		return file;
+	}
+
+	
+	/**
+	 * Will resolve a BoardLocation enum value by rank and file index (0..7)
+	 * @param rank
+	 * @param file
+	 * @return
+	 */
+	public static BoardLocation find(int rank, int file) {
+		BoardLocation result = null;
+		for(BoardLocation b : BoardLocation.values())
+			if ( b.getRank() == rank && b.getFile() == file ) {
+				result = b;
+				continue;
+			}
+		
+		return result;
 	}
 }
