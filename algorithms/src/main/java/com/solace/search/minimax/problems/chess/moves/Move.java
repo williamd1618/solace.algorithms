@@ -22,4 +22,6 @@ public abstract class Move {
 	}
 	
 	public abstract void execute(Board board) throws MoveException;
+	
+	public abstract boolean isCheck();
 }

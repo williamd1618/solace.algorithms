@@ -3,38 +3,38 @@ package com.solace.search.minimax.problems.chess;
 
 public class Placement {
 
-	private EPlayer player;
-	private EPiece piece;
-	private EPlacement location;
+	private Player player;
+	private GamePiece piece;
+	private BoardLocation location;
 
-	public Placement(EPlayer player, EPiece piece, EPlacement location) {
+	public Placement(Player player, GamePiece piece, BoardLocation location) {
 		super();
 		this.player = player;
 		this.piece = piece;
 		this.location = location;
 	}
 
-	public EPlayer getPlayer() {
+	public Player getPlayer() {
 		return player;
 	}
 
-	public void setPlayer(EPlayer player) {
+	public void setPlayer(Player player) {
 		this.player = player;
 	}
 
-	public EPiece getPiece() {
+	public GamePiece getGamePiece() {
 		return piece;
 	}
 
-	public void setPiece(EPiece piece) {
+	public void setGamePiece(GamePiece piece) {
 		this.piece = piece;
 	}
 
-	public EPlacement getLocation() {
+	public BoardLocation getBoardLocation() {
 		return location;
 	}
 
-	public void setLocation(EPlacement location) {
+	public void setBoardLocation(BoardLocation location) {
 		this.location = location;
 	}
 

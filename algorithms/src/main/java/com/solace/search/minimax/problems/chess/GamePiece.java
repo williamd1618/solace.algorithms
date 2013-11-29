@@ -6,7 +6,7 @@ package com.solace.search.minimax.problems.chess;
  * @author <a href="mailto:daniel.williams@gmail.com">Daniel Williams</a>
  * 
  */
-public enum EPiece {
+public enum GamePiece {
 
 	King("King", 1), Queen("Queen", 1), Rook("Rook", 2), Bishop("Bishop", 2), Knight(
 			"Knight", 2), Pawn("Pawn", 8), Empty("Empty", 64);
@@ -22,7 +22,7 @@ public enum EPiece {
 		return count;
 	}
 
-	private EPiece(String name, int count) {
+	private GamePiece(String name, int count) {
 		this.name = name;
 		this.count = count;
 	}

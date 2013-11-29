@@ -6,7 +6,7 @@ package com.solace.search.minimax.problems.chess;
  * @author <a href="mailto:daniel.williams@gmail.com">Daniel Williams</a>
  * 
  */
-public enum EPlacement {
+public enum BoardLocation {
 
 	A1(0, 0), B1(0, 1), C1(0, 2), D1(0, 3), E1(0, 4), F1(0, 4), G1(0, 6), H1(0,
 			7), A2(1, 0), B2(1, 1), C2(1, 2), D2(1, 3), E2(1, 4), F2(1, 4), G2(
@@ -21,7 +21,7 @@ public enum EPlacement {
 
 	private int x, y;
 
-	private EPlacement(int x, int y) {
+	private BoardLocation(int x, int y) {
 		this.x = x;
 		this.y = y;
 	}

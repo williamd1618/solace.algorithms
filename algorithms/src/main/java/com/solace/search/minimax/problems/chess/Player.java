@@ -1,6 +1,6 @@
 package com.solace.search.minimax.problems.chess;
 
-public enum EPlayer {
+public enum Player {
 
 	White("White"), Black("Black"), All("All");
 
@@ -10,7 +10,7 @@ public enum EPlayer {
 		return color;
 	}
 
-	private EPlayer(String color) {
+	private Player(String color) {
 		this.color = color;
 	}
 

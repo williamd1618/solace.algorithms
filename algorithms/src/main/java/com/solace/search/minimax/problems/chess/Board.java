@@ -22,39 +22,39 @@ public class Board {
 		// to be able to detect stateful-ness
 		for (int i = 0; i < 8; i++)
 			for (int j = 0; j < 8; j++)
-				EMPTY_LAYOUT[i][j] = new Piece(EPiece.Empty, EPlayer.All);
+				EMPTY_LAYOUT[i][j] = new Piece(GamePiece.Empty, Player.All);
 
 		// default it all to empty
 		// to be able to detect stateful-ness
 		for (int i = 0; i < 8; i++)
 			for (int j = 0; j < 8; j++)
-				DEFAULT_LAYOUT[i][j] = new Piece(EPiece.Empty, EPlayer.All);
+				DEFAULT_LAYOUT[i][j] = new Piece(GamePiece.Empty, Player.All);
 
 		// setup pawns on opposing sides (row 2 and 7 0 indexed)
 		for (int i = 0; i < 8; i++) {
-			DEFAULT_LAYOUT[i][1] = new Piece(EPiece.Pawn, EPlayer.White);
-			DEFAULT_LAYOUT[i][6] = new Piece(EPiece.Pawn, EPlayer.Black);
+			DEFAULT_LAYOUT[i][1] = new Piece(GamePiece.Pawn, Player.White);
+			DEFAULT_LAYOUT[i][6] = new Piece(GamePiece.Pawn, Player.Black);
 		}
 
 		// other white pieces
-		DEFAULT_LAYOUT[0][0] = DEFAULT_LAYOUT[7][0] = new Piece(EPiece.Rook,
-				EPlayer.White);
-		DEFAULT_LAYOUT[1][0] = DEFAULT_LAYOUT[6][0] = new Piece(EPiece.Knight,
-				EPlayer.White);
-		DEFAULT_LAYOUT[2][0] = DEFAULT_LAYOUT[5][0] = new Piece(EPiece.Bishop,
-				EPlayer.White);
-		DEFAULT_LAYOUT[3][0] = new Piece(EPiece.Queen, EPlayer.White);
-		DEFAULT_LAYOUT[4][0] = new Piece(EPiece.King, EPlayer.White);
+		DEFAULT_LAYOUT[0][0] = DEFAULT_LAYOUT[7][0] = new Piece(GamePiece.Rook,
+				Player.White);
+		DEFAULT_LAYOUT[1][0] = DEFAULT_LAYOUT[6][0] = new Piece(GamePiece.Knight,
+				Player.White);
+		DEFAULT_LAYOUT[2][0] = DEFAULT_LAYOUT[5][0] = new Piece(GamePiece.Bishop,
+				Player.White);
+		DEFAULT_LAYOUT[3][0] = new Piece(GamePiece.Queen, Player.White);
+		DEFAULT_LAYOUT[4][0] = new Piece(GamePiece.King, Player.White);
 
 		// other black pieces
-		DEFAULT_LAYOUT[0][7] = DEFAULT_LAYOUT[7][7] = new Piece(EPiece.Rook,
-				EPlayer.Black);
-		DEFAULT_LAYOUT[1][7] = DEFAULT_LAYOUT[6][7] = new Piece(EPiece.Knight,
-				EPlayer.Black);
-		DEFAULT_LAYOUT[2][7] = DEFAULT_LAYOUT[5][7] = new Piece(EPiece.Bishop,
-				EPlayer.Black);
-		DEFAULT_LAYOUT[3][7] = new Piece(EPiece.Queen, EPlayer.Black);
-		DEFAULT_LAYOUT[4][7] = new Piece(EPiece.King, EPlayer.Black);
+		DEFAULT_LAYOUT[0][7] = DEFAULT_LAYOUT[7][7] = new Piece(GamePiece.Rook,
+				Player.Black);
+		DEFAULT_LAYOUT[1][7] = DEFAULT_LAYOUT[6][7] = new Piece(GamePiece.Knight,
+				Player.Black);
+		DEFAULT_LAYOUT[2][7] = DEFAULT_LAYOUT[5][7] = new Piece(GamePiece.Bishop,
+				Player.Black);
+		DEFAULT_LAYOUT[3][7] = new Piece(GamePiece.Queen, Player.Black);
+		DEFAULT_LAYOUT[4][7] = new Piece(GamePiece.King, Player.Black);
 
 	}
 
@@ -102,7 +102,7 @@ public class Board {
 	}
 
 	public void place(Piece piece, String at) {
-		place(piece, Enum.valueOf(EPlacement.class, at));
+		place(piece, Enum.valueOf(BoardLocation.class, at));
 	}
 
 	/**
@@ -115,12 +115,27 @@ public class Board {
 	 * 
 	 * @param piece
 	 * @param placement
+	 * @return will return true only if the move produces a checkmate
 	 */
-	public void place(Piece piece, EPlacement placement) {
+	public boolean place(Piece piece, BoardLocation placement) {
+		boolean checkmate = false;
+
 		if (placement != null) {
-			if (board[placement.getX()][placement.getY()].getPiece() != EPiece.Empty) {
+			Player opponent = piece.getPlayer() == Player.White ? Player.Black
+					: Player.White;
+
+			Piece target = board[placement.getX()][placement.getY()];
+
+			if (target.getPiece() != GamePiece.Empty
+					&& target.getPlayer() == opponent) {
 				LOGGER.info("{} has capture a {}", piece.getPlayer(),
 						board[placement.getX()][placement.getY()].getPiece());
+
+				if (target.getPiece() == GamePiece.King) {
+					LOGGER.info("checkmate identified for {}",
+							piece.getPlayer());
+					checkmate = true;
+				}
 
 				board[placement.getX()][placement.getY()] = piece;
 			} else {
@@ -130,6 +145,8 @@ public class Board {
 		} else {
 			LOGGER.warn("placement was passed in as null");
 		}
+
+		return checkmate;
 	}
 
 	/**
@@ -138,8 +155,8 @@ public class Board {
 	 * @param placement
 	 * @return
 	 */
-	public boolean isOccupied(EPlacement placement) {
-		return board[placement.getX()][placement.getY()].getPiece() != EPiece.Empty;
+	public boolean isOccupied(BoardLocation placement) {
+		return board[placement.getX()][placement.getY()].getPiece() != GamePiece.Empty;
 	}
 
 	public static Board factoryEmptyBoard() {

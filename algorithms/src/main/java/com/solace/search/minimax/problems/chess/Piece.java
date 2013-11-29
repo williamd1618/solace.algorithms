@@ -2,29 +2,29 @@ package com.solace.search.minimax.problems.chess;
 
 public class Piece {
 
-	private EPiece piece;
+	private GamePiece piece;
 
-	private EPlayer player;
+	private Player player;
 
-	public Piece(EPiece piece, EPlayer player) {
+	public Piece(GamePiece piece, Player player) {
 		super();
 		this.piece = piece;
 		this.player = player;
 	}
 
-	public EPiece getPiece() {
+	public GamePiece getPiece() {
 		return piece;
 	}
 
-	public void setPiece(EPiece piece) {
+	public void setPiece(GamePiece piece) {
 		this.piece = piece;
 	}
 
-	public EPlayer getPlayer() {
+	public Player getPlayer() {
 		return player;
 	}
 
-	public void setPlayer(EPlayer player) {
+	public void setPlayer(Player player) {
 		this.player = player;
 	}
 

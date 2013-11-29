@@ -22,15 +22,21 @@ public class PawnMove extends Move {
 	@Override
 	public void execute(Board board) throws MoveException {
 		
-		if ( from.getLocation().getX() == to.getLocation().getX() ) {
-			if ( Math.abs(from.getLocation().getX() - to.getLocation().getX()) == 1 && !board.isOccupied(to.getLocation())) {
-				board.place(piece, to.getLocation());
+		if ( from.getBoardLocation().getX() == to.getBoardLocation().getX() ) {
+			if ( Math.abs(from.getBoardLocation().getX() - to.getBoardLocation().getX()) == 1 && !board.isOccupied(to.getBoardLocation())) {
+				board.place(piece, to.getBoardLocation());
 			}
-		} else if ( Math.abs(from.getLocation().getX() - to.getLocation().getX()) == 1 &&
-				Math.abs(from.getLocation().getY() - to.getLocation().getY()) == 1 &&
-				board.isOccupied(to.getLocation())) {
+		} else if ( Math.abs(from.getBoardLocation().getX() - to.getBoardLocation().getX()) == 1 &&
+				Math.abs(from.getBoardLocation().getY() - to.getBoardLocation().getY()) == 1 &&
+				board.isOccupied(to.getBoardLocation())) {
 			
-			board.place(piece, to.getLocation());
+			board.place(piece, to.getBoardLocation());
 		}
+	}
+
+	@Override
+	public boolean isCheck() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }
