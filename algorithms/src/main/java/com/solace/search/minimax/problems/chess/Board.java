@@ -189,6 +189,11 @@ public class Board {
 		return board[placement.getRank()][placement.getFile()].getPiece() != GamePiece.Empty;
 	}
 
+	public boolean isOccupiedByOpponent(BoardLocation placement, Player opponent) {
+		return board[placement.getRank()][placement.getFile()].getPiece() != GamePiece.Empty
+				&& board[placement.getRank()][placement.getFile()].getPlayer() == opponent;
+	}
+
 	public static Board factoryEmptyBoard() {
 		return new Board(EMPTY_LAYOUT);
 	}

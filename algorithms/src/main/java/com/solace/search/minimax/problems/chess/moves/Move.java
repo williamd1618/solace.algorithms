@@ -55,7 +55,7 @@ public abstract class Move {
 	 * @param p
 	 * @return
 	 */
-	protected boolean isKing(Board board, int rank, int file, Player p) {
+	public static boolean isKing(Board board, int rank, int file, Player p) {
 		Piece piece = board.getPieces()[rank][file];
 
 		return piece.getPiece() == GamePiece.King && piece.getPlayer() == p;

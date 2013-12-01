@@ -1,5 +1,10 @@
 package com.solace.search.minimax.problems.chess;
 
+import com.solace.search.minimax.problems.chess.moves.IValidMoveEvaluator;
+import com.solace.search.minimax.problems.chess.moves.KingMoveEvaluator;
+import com.solace.search.minimax.problems.chess.moves.PawnMoveEvaluator;
+import com.solace.search.minimax.problems.chess.moves.QueenMoveEvaluator;
+
 public class Piece {
 
 	private GamePiece piece;
@@ -51,5 +56,16 @@ public class Piece {
 	
 	public boolean isCaptured() {
 		return isCaptured;
+	}
+	
+	public IValidMoveEvaluator factoryMoveEvaluator() {
+		if ( piece == GamePiece.Pawn ) 
+			return new PawnMoveEvaluator();
+		else if ( piece == GamePiece.King )
+			return new KingMoveEvaluator();
+		else if ( piece == GamePiece.Queen ) 
+			return new QueenMoveEvaluator();
+		else 
+			return null;
 	}
 }

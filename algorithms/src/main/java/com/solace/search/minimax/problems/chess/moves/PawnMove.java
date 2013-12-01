@@ -77,10 +77,4 @@ public class PawnMove extends Move {
 
 		return isCheck;
 	}
-
-	public boolean isKing(Board board, int file, int rank, Player p) {
-		Piece piece = board.getPieces()[file][rank];
-
-		return piece.getPiece() == GamePiece.King && piece.getPlayer() == p;
-	}
 }
