@@ -73,7 +73,7 @@ public class PawnMove extends Move {
 					.getOpponent())
 					|| isKing(board, rank + 1, file - 1, piece.getPlayer()
 							.getOpponent());
-		}
+		} 
 
 		return isCheck;
 	}

@@ -13,10 +13,21 @@ public class KingMove extends Move {
 		// TODO Auto-generated constructor stub
 	}
 
+	
+	/**
+	 * Will update the location of the opposing King
+	 */
 	@Override
 	public void doExecute(Board board) throws MoveException {
 
 		board.place(piece, to.getBoardLocation());
+
+		if (piece.getPlayer() == Player.White)
+			board.setWhiteKingPlacement(new Placement(Player.White,
+					GamePiece.King, to.getBoardLocation()));
+		else
+			board.setBlackKingPlacement(new Placement(Player.Black,
+					GamePiece.King, to.getBoardLocation()));
 	}
 
 	/**
