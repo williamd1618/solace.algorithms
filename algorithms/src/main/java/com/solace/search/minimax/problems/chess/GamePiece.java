@@ -26,5 +26,4 @@ public enum GamePiece {
 		this.name = name;
 		this.count = count;
 	}
-
 }

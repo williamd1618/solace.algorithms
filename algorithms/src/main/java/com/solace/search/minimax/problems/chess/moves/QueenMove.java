@@ -1,5 +1,8 @@
 package com.solace.search.minimax.problems.chess.moves;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.solace.search.minimax.problems.chess.Board;
 import com.solace.search.minimax.problems.chess.BoardLocation;
 import com.solace.search.minimax.problems.chess.ChessConstants;
@@ -17,6 +20,9 @@ import com.solace.search.minimax.problems.chess.Player;
  */
 public class QueenMove extends Move {
 
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(QueenMove.class);
+
 	public QueenMove(Piece piece, Placement from, Placement to) {
 		super(piece, from, to);
 		// TODO Auto-generated constructor stub
@@ -26,11 +32,10 @@ public class QueenMove extends Move {
 	public void doExecute(Board board) throws MoveException {
 		GamePiece target = GamePiece.Empty;
 		if ((target = validateAvailable(board, from.getBoardLocation(),
-				to.getBoardLocation())) != GamePiece.King) {
-			// if it's the king we've won
-		} else {
-			// otherwise we haven't
-		}
+				to.getBoardLocation())) != GamePiece.King)
+			LOGGER.info("Checkmate");
+
+		board.place(piece, to.getBoardLocation());
 	}
 
 	/**

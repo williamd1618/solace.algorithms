@@ -40,29 +40,47 @@ public class Board {
 
 		// setup pawns on opposing sides (row 2 and 7, 0 indexed)
 		for (int i = 0; i < 8; i++) {
-			DEFAULT_LAYOUT[1][i] = new Piece(GamePiece.Pawn, Player.White);
-			DEFAULT_LAYOUT[6][i] = new Piece(GamePiece.Pawn, Player.Black);
+			DEFAULT_LAYOUT[1][i] = new Piece(GamePiece.Pawn, Player.White,
+					BoardLocation.find(1, i));
+			DEFAULT_LAYOUT[6][i] = new Piece(GamePiece.Pawn, Player.Black,
+					BoardLocation.find(6, i));
 		}
 
 		// other white pieces
-		DEFAULT_LAYOUT[0][0] = DEFAULT_LAYOUT[0][7] = new Piece(GamePiece.Rook,
-				Player.White);
-		DEFAULT_LAYOUT[0][1] = DEFAULT_LAYOUT[0][6] = new Piece(
-				GamePiece.Knight, Player.White);
-		DEFAULT_LAYOUT[0][2] = DEFAULT_LAYOUT[0][5] = new Piece(
-				GamePiece.Bishop, Player.White);
-		DEFAULT_LAYOUT[0][3] = new Piece(GamePiece.Queen, Player.White);
-		DEFAULT_LAYOUT[0][4] = new Piece(GamePiece.King, Player.White);
+		DEFAULT_LAYOUT[0][0] = new Piece(GamePiece.Rook, Player.White,
+				BoardLocation.find(0, 0));
+		DEFAULT_LAYOUT[0][7] = new Piece(GamePiece.Rook, Player.White,
+				BoardLocation.find(0, 7));
+		DEFAULT_LAYOUT[0][1] = new Piece(GamePiece.Rook, Player.White,
+				BoardLocation.find(0, 1));
+		DEFAULT_LAYOUT[0][6] = new Piece(GamePiece.Knight, Player.White,
+				BoardLocation.find(0, 6));
+		DEFAULT_LAYOUT[0][2] = new Piece(GamePiece.Rook, Player.White,
+				BoardLocation.find(0, 2));
+		DEFAULT_LAYOUT[0][5] = new Piece(GamePiece.Bishop, Player.White,
+				BoardLocation.find(0, 5));
+		DEFAULT_LAYOUT[0][3] = new Piece(GamePiece.Queen, Player.White,
+				BoardLocation.find(0, 3));
+		DEFAULT_LAYOUT[0][4] = new Piece(GamePiece.King, Player.White,
+				BoardLocation.find(0, 4));
 
 		// other black pieces
-		DEFAULT_LAYOUT[7][0] = DEFAULT_LAYOUT[7][7] = new Piece(GamePiece.Rook,
-				Player.Black);
-		DEFAULT_LAYOUT[7][1] = DEFAULT_LAYOUT[7][6] = new Piece(
-				GamePiece.Knight, Player.Black);
-		DEFAULT_LAYOUT[7][2] = DEFAULT_LAYOUT[7][5] = new Piece(
-				GamePiece.Bishop, Player.Black);
-		DEFAULT_LAYOUT[7][3] = new Piece(GamePiece.Queen, Player.Black);
-		DEFAULT_LAYOUT[7][4] = new Piece(GamePiece.King, Player.Black);
+		DEFAULT_LAYOUT[7][0] = new Piece(GamePiece.Rook, Player.Black,
+				BoardLocation.find(7, 0));
+		DEFAULT_LAYOUT[7][7] = new Piece(GamePiece.Rook, Player.Black,
+				BoardLocation.find(7, 7));
+		DEFAULT_LAYOUT[7][1] = new Piece(GamePiece.Knight, Player.Black,
+				BoardLocation.find(7, 1));
+		DEFAULT_LAYOUT[7][6] = new Piece(GamePiece.Knight, Player.Black,
+				BoardLocation.find(7, 6));
+		DEFAULT_LAYOUT[7][2] = new Piece(GamePiece.Knight, Player.Black,
+				BoardLocation.find(7, 2));
+		DEFAULT_LAYOUT[7][5] = new Piece(GamePiece.Bishop, Player.Black,
+				BoardLocation.find(7, 5));
+		DEFAULT_LAYOUT[7][3] = new Piece(GamePiece.Knight, Player.Black,
+				BoardLocation.find(7, 3));
+		DEFAULT_LAYOUT[7][4] = new Piece(GamePiece.King, Player.Black,
+				BoardLocation.find(7, 4));
 
 	}
 
@@ -147,6 +165,9 @@ public class Board {
 				}
 
 				board[placement.getRank()][placement.getFile()] = piece;
+
+				piece.setLocation(BoardLocation.find(placement.getRank(),
+						placement.getFile()));
 			} else {
 				LOGGER.info("placing a {} for {} at {}", piece.getPiece(),
 						piece.getPlayer(), placement);

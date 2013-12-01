@@ -1,6 +1,9 @@
 package com.solace.search.minimax.problems.chess.moves;
 
+import java.util.List;
+
 import com.solace.search.minimax.problems.chess.Board;
+import com.solace.search.minimax.problems.chess.BoardLocation;
 import com.solace.search.minimax.problems.chess.GamePiece;
 import com.solace.search.minimax.problems.chess.Piece;
 import com.solace.search.minimax.problems.chess.Placement;
@@ -56,5 +59,9 @@ public abstract class Move {
 		Piece piece = board.getPieces()[rank][file];
 
 		return piece.getPiece() == GamePiece.King && piece.getPlayer() == p;
+	}
+	
+	public static List<BoardLocation> findValidMoves(Board board, Piece piece) {
+		return null;
 	}
 }
