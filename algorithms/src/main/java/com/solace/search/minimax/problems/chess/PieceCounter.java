@@ -20,7 +20,7 @@ public class PieceCounter {
 			.getLogger(PieceCounter.class);
 
 	private Board board;
-
+	
 	private Map<Player, Map<GamePiece, AtomicInteger>> pieces = new HashMap<Player, Map<GamePiece, AtomicInteger>>();
 
 	public PieceCounter(Board board) {
@@ -34,12 +34,13 @@ public class PieceCounter {
 			for (int f = 0; f < FILE_COUNT; f++) {
 				final GamePiece piece = board.getPieces()[r][f].getPiece();
 				final Player player = board.getPieces()[r][f].getPlayer();
-				
-				if ( piece == GamePiece.Empty)
+
+				if (piece == GamePiece.Empty)
 					continue;
 
 				if (pieces.containsKey(player)) {
 					if (pieces.get(player).containsKey(piece)) {
+
 						pieces.get(player).get(piece).incrementAndGet();
 					} else {
 						LOGGER.warn(

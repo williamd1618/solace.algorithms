@@ -1,6 +1,5 @@
 package com.solace.algorithms.search.minimax;
 
-import com.solace.algorithms.search.astar.AStarNode;
 import com.solace.graph.Adjacency;
 import com.solace.graph.AdjacencyGenerator;
 import com.solace.graph.Node;
@@ -8,7 +7,7 @@ import com.solace.search.minimax.problems.tictactoe.Board.Piece;
 
 public abstract class MiniMaxNode<ValueType, NodeType extends Node<ValueType>> extends
 		Node<ValueType> implements AdjacencyGenerator<ValueType, NodeType>,
-		Comparable<AStarNode<ValueType, NodeType>> {
+		Comparable<MiniMaxNode<ValueType, NodeType>> {
 	
 	boolean isMax = false;
 	
@@ -29,7 +28,7 @@ public abstract class MiniMaxNode<ValueType, NodeType extends Node<ValueType>> e
 		// TODO Auto-generated constructor stub
 	}
 
-	public int compareTo(AStarNode<ValueType, NodeType> o) {
+	public int compareTo(MiniMaxNode<ValueType, NodeType> o) {
 		// TODO Auto-generated method stub
 		return 0;
 	}

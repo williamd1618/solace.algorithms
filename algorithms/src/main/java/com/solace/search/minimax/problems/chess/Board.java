@@ -1,5 +1,10 @@
 package com.solace.search.minimax.problems.chess;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,6 +27,8 @@ public class Board {
 	private static Piece[][] DEFAULT_LAYOUT = new Piece[8][8];
 
 	private static Piece[][] EMPTY_LAYOUT = new Piece[8][8];
+
+	private Map<Player, List<Piece>> pieceLocations = new HashMap<Player, List<Piece>>();
 
 	private Placement whiteKingPlacement, blackKingPlacement;
 
@@ -100,9 +107,24 @@ public class Board {
 		for (int i = 0; i < 8; i++)
 			System.arraycopy(pieces, 0, this.board, 0, 8);
 
+		pieceLocations.put(Player.Black, new ArrayList<Piece>());
+		pieceLocations.put(Player.White, new ArrayList<Piece>());
+
+		// load the map of locations ot be easily accessed for when
+		// generated adjacency lists
+		for (int r = 0, f = 0; r < ChessConstants.RANK_COUNT
+				&& f < ChessConstants.FILE_COUNT; r++, f++)
+			if (pieces[r][f].getPiece() != GamePiece.Empty)
+				pieceLocations.get(pieces[r][r].getPlayer()).add(pieces[r][f]);
+
 		LOGGER.debug("Board cloned to \n{}", toString());
 	}
 
+	/**
+	 * Will clone the pieces map and re-initialize the cloned
+	 * pieceLocations map
+	 * @param board
+	 */
 	public Board(Board board) {
 		this(board.getPieces());
 	}
@@ -113,6 +135,10 @@ public class Board {
 
 	public void setWhiteKingPlacement(Placement whiteKingPlacement) {
 		this.whiteKingPlacement = whiteKingPlacement;
+	}
+
+	public Map<Player, List<Piece>> getPieceLocations() {
+		return pieceLocations;
 	}
 
 	public Placement getBlackKingPlacement() {
@@ -158,6 +184,12 @@ public class Board {
 						board[placement.getRank()][placement.getFile()]
 								.getPiece());
 
+				LOGGER.info(
+						"Removing {} at {} from the board and location map.",
+						target.getPiece(), target.getLocation());
+				
+				pieceLocations.get(opponent).remove(target);
+
 				if (target.getPiece() == GamePiece.King) {
 					LOGGER.info("checkmate identified for {}",
 							piece.getPlayer());
@@ -165,7 +197,7 @@ public class Board {
 				}
 
 				board[placement.getRank()][placement.getFile()] = piece;
-
+				
 				piece.setLocation(BoardLocation.find(placement.getRank(),
 						placement.getFile()));
 			} else {
