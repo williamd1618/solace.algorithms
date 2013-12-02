@@ -104,8 +104,12 @@ public class Board {
 	 * @param pieces
 	 */
 	public Board(Piece[][] pieces) {
+		LOGGER.debug(pieces.toString());
+
+		board = new Piece[8][8];
+
 		for (int i = 0; i < 8; i++)
-			System.arraycopy(pieces, 0, this.board, 0, 8);
+			System.arraycopy(pieces[i], 0, this.board[i], 0, 8);
 
 		pieceLocations.put(Player.Black, new ArrayList<Piece>());
 		pieceLocations.put(Player.White, new ArrayList<Piece>());
@@ -121,8 +125,8 @@ public class Board {
 	}
 
 	/**
-	 * Will clone the pieces map and re-initialize the cloned
-	 * pieceLocations map
+	 * Will clone the pieces map and re-initialize the cloned pieceLocations map
+	 * 
 	 * @param board
 	 */
 	public Board(Board board) {
@@ -187,7 +191,7 @@ public class Board {
 				LOGGER.info(
 						"Removing {} at {} from the board and location map.",
 						target.getPiece(), target.getLocation());
-				
+
 				pieceLocations.get(opponent).remove(target);
 
 				if (target.getPiece() == GamePiece.King) {
@@ -197,12 +201,14 @@ public class Board {
 				}
 
 				board[placement.getRank()][placement.getFile()] = piece;
-				
+
 				piece.setLocation(BoardLocation.find(placement.getRank(),
 						placement.getFile()));
 			} else {
 				LOGGER.info("placing a {} for {} at {}", piece.getPiece(),
 						piece.getPlayer(), placement);
+
+				board[placement.getRank()][placement.getFile()] = piece;
 			}
 		} else {
 			LOGGER.warn("placement was passed in as null");
@@ -228,5 +234,24 @@ public class Board {
 
 	public static Board factoryEmptyBoard() {
 		return new Board(EMPTY_LAYOUT);
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		for (int r=7; r >= 0; r--) {
+			sb.append("\n");
+			for (int f = 0; f<8; f++)
+				sb.append("[").append(board[r][f]).append("]");
+		}
+
+		return sb.toString();
+	}
+
+	public void clear() {
+		for (int r = 0; r < 8; r++) {			
+			for (int f = 0; f < 8; f++)
+				board[r][f] = new Piece(GamePiece.Empty,Player.All);				
+		}
 	}
 }

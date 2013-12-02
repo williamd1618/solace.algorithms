@@ -29,13 +29,15 @@ public class QueenMove extends Move {
 	}
 
 	@Override
-	public void doExecute(Board board) throws MoveException {
+	public boolean doExecute(Board board) throws MoveException {
+		
 		GamePiece target = GamePiece.Empty;
+		
 		if ((target = validateAvailable(board, from.getBoardLocation(),
 				to.getBoardLocation())) != GamePiece.King)
 			LOGGER.info("Checkmate");
 
-		board.place(piece, to.getBoardLocation());
+		return board.place(piece, to.getBoardLocation());
 	}
 
 	/**

@@ -6,6 +6,10 @@ public class Placement {
 	private Player player;
 	private GamePiece piece;
 	private BoardLocation location;
+	
+	public Placement(Piece piece, BoardLocation loc) {
+		this(piece.getPlayer(), piece.getPiece(), loc);
+	}
 
 	public Placement(Player player, GamePiece piece, BoardLocation location) {
 		super();

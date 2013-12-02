@@ -161,5 +161,44 @@
 				</plugins>
 			</build>
 		</profile>
+		<profile>
+			<id>chess</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-jar-plugin</artifactId>
+						<configuration>
+							<archive>
+								<manifest>
+									<mainClass>com.solace.search.minimax.problems.chess.Main</mainClass>
+								</manifest>
+							</archive>
+						</configuration>
+					</plugin>
+
+					<plugin>
+						<groupId>org.dstovall</groupId>
+						<artifactId>onejar-maven-plugin</artifactId>
+						<version>1.4.4</version>
+						<executions>
+							<execution>
+								<configuration>
+									<mainClass>com.solace.search.minimax.problems.chess.Main</mainClass>
+									<!-- Optional, default is false -->
+									<attachToBuild>true</attachToBuild>
+									<!-- Optional, default is "onejar" -->
+									<classifier>onejar</classifier>
+									<filename>chess.jar</filename>
+								</configuration>
+								<goals>
+									<goal>one-jar</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 	</profiles>
 </project>

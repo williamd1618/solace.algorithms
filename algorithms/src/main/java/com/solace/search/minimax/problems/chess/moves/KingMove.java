@@ -18,9 +18,11 @@ public class KingMove extends Move {
 	 * Will update the location of the opposing King
 	 */
 	@Override
-	public void doExecute(Board board) throws MoveException {
+	public boolean doExecute(Board board) throws MoveException {
+		
+		boolean isMate = false;
 
-		board.place(piece, to.getBoardLocation());
+		isMate = board.place(piece, to.getBoardLocation());
 
 		if (piece.getPlayer() == Player.White)
 			board.setWhiteKingPlacement(new Placement(Player.White,
@@ -28,6 +30,8 @@ public class KingMove extends Move {
 		else
 			board.setBlackKingPlacement(new Placement(Player.Black,
 					GamePiece.King, to.getBoardLocation()));
+		
+		return isMate;
 	}
 
 	/**

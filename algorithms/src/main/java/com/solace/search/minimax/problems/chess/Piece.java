@@ -10,11 +10,11 @@ public class Piece {
 	private GamePiece piece;
 
 	private Player player;
-	
+
 	private boolean isCaptured = false;
-	
+
 	BoardLocation location;
-	
+
 	public Piece(GamePiece piece, Player player) {
 		this(piece, player, null);
 	}
@@ -49,23 +49,44 @@ public class Piece {
 	public void setPlayer(Player player) {
 		this.player = player;
 	}
-	
+
 	public void capture() {
 		isCaptured = true;
 	}
-	
+
 	public boolean isCaptured() {
 		return isCaptured;
 	}
-	
+
 	public IValidMoveEvaluator factoryMoveEvaluator() {
-		if ( piece == GamePiece.Pawn ) 
+		if (piece == GamePiece.Pawn)
 			return new PawnMoveEvaluator();
-		else if ( piece == GamePiece.King )
+		else if (piece == GamePiece.King)
 			return new KingMoveEvaluator();
-		else if ( piece == GamePiece.Queen ) 
+		else if (piece == GamePiece.Queen)
 			return new QueenMoveEvaluator();
-		else 
+		else
 			return null;
 	}
+//
+//	@Override
+//	public boolean equals(Object obj) {
+//		if (!(obj instanceof Piece))
+//			return false;
+//
+//		Piece p = (Piece) obj;
+//
+//		return this.getPiece() == p.getPiece()
+//				&& this.getPlayer() == p.getPlayer()
+//				&& this.getLocation() == p.getLocation();
+//		
+//	}
+
+	@Override
+	public String toString() {
+		if ( player == Player.All )
+			return "  ";
+		
+		return player.name().substring(0,1) + piece.name().substring(0, 1);
+	}	
 }

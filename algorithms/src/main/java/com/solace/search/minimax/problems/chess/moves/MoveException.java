@@ -1,6 +1,6 @@
 package com.solace.search.minimax.problems.chess.moves;
 
-public class MoveException extends Exception {
+public class MoveException extends RuntimeException {
 
 	public MoveException() {
 		// TODO Auto-generated constructor stub

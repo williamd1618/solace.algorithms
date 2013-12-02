@@ -28,14 +28,16 @@ public class PawnMove extends Move {
 	 * on potential attacks
 	 */
 	@Override
-	public void doExecute(Board board) throws MoveException {
+	public boolean doExecute(Board board) throws MoveException {
+		
+		boolean isMate = false;
 
 		if (from.getBoardLocation().getFile() == to.getBoardLocation()
 				.getFile()) {
 			if (Math.abs(from.getBoardLocation().getRank()
 					- to.getBoardLocation().getRank()) == 1
 					&& !board.isOccupied(to.getBoardLocation())) {
-				board.place(piece, to.getBoardLocation());
+				isMate = board.place(piece, to.getBoardLocation());
 			}
 		} else if (Math.abs(from.getBoardLocation().getRank()
 				- to.getBoardLocation().getRank()) == 1
@@ -43,16 +45,18 @@ public class PawnMove extends Move {
 						- to.getBoardLocation().getFile()) == 1
 				&& board.isOccupied(to.getBoardLocation())) {
 
-			board.place(piece, to.getBoardLocation());
+			isMate = board.place(piece, to.getBoardLocation());
 
 			// if this player has make it to the opponents first rank
 			// then the pawn can be promoted to a queen.
 			Player opponent = piece.getPlayer().getOpponent();
 
 			if (opponent.getFirstRankIndex() == to.getBoardLocation().getRank())
-				board.place(new Piece(GamePiece.Queen, piece.getPlayer()),
+				isMate = board.place(new Piece(GamePiece.Queen, piece.getPlayer()),
 						to.getBoardLocation());
 		}
+		
+		return isMate;
 	}
 
 	@Override

@@ -10,11 +10,17 @@ import org.slf4j.LoggerFactory;
 import com.solace.algorithms.search.minimax.MiniMaxNode;
 import com.solace.graph.Adjacency;
 import com.solace.graph.Node;
+import com.solace.search.minimax.problems.chess.moves.KingMove;
+import com.solace.search.minimax.problems.chess.moves.Move;
+import com.solace.search.minimax.problems.chess.moves.PawnMove;
+import com.solace.search.minimax.problems.chess.moves.QueenMove;
 
 public class ChessNode extends MiniMaxNode<State, ChessNode> {
 
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(ChessNode.class);
+	
+	boolean checkMateFound = false;
 
 	public ChessNode(Node<State> parent, State t) {
 		super(parent, t);
@@ -52,10 +58,27 @@ public class ChessNode extends MiniMaxNode<State, ChessNode> {
 					getValue().getBoard(), p)) {
 				Board newBoard = new Board(getValue().getBoard());
 
-				newBoard.place(p, loc);
+				Move m = factoryMove(p, loc);
+
+				LOGGER.debug("Instantiated a {} to move {} from {} to {}", m
+						.getClass().getSimpleName(), p.getPiece(), p
+						.getLocation(), loc);
+				
+				m.execute(newBoard);
+
+//				newBoard.place(p, loc);
+				
+				checkMateFound = m.isCheckmate();
 
 				ChessNode node = new ChessNode(this, new State(newBoard,
 						opponent, !getValue().isMax(), getDepth() - 1));
+
+				if (checkMateFound) {
+					LOGGER.info(
+							"A check mate has been identified for player {} at {} .. clearing adjacency list",
+							p.getPlayer(), loc);
+					nodes.clear();
+				}
 
 				nodes.add(node);
 
@@ -74,6 +97,10 @@ public class ChessNode extends MiniMaxNode<State, ChessNode> {
 	/**
 	 * the heuristic value for the board as a whole will be calculated as the
 	 * piece that has the closest direct line value to the opponents King
+	 * <p>
+	 * Evaluates the positioning of the {@link Board} as a whole to give the
+	 * highest value, but the actual values is based upon which piece is the
+	 * closest to the opponent's {@link GamePiece#King}
 	 */
 	@Override
 	public double calculateH() {
@@ -93,6 +120,8 @@ public class ChessNode extends MiniMaxNode<State, ChessNode> {
 					+ Math.pow(Math.abs(king.getFile()
 							- p.getLocation().getFile()), 2);
 
+			// should possibly multiple by -1 to make the lowest value, the
+			// highest
 			double z = Math.sqrt(squared);
 
 			if (z < minValue)
@@ -104,7 +133,23 @@ public class ChessNode extends MiniMaxNode<State, ChessNode> {
 
 	@Override
 	public boolean containsWin() {
-		// TODO Auto-generated method stub
-		return false;
+		// return getValue().getBoard()
+		return true;
+	}
+
+	private Move factoryMove(Piece piece, BoardLocation loc) {
+		if (piece.getPiece() == GamePiece.Pawn)
+			return new PawnMove(piece,
+					new Placement(piece, piece.getLocation()), new Placement(
+							piece, loc));
+		else if (piece.getPiece() == GamePiece.King)
+			return new KingMove(piece,
+					new Placement(piece, piece.getLocation()), new Placement(
+							piece, loc));
+		else if (piece.getPiece() == GamePiece.Queen)
+			return new QueenMove(piece, new Placement(piece,
+					piece.getLocation()), new Placement(piece, loc));
+		else
+			return null;
 	}
 }

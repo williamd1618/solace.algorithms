@@ -13,6 +13,8 @@ public abstract class Move {
 
 	Piece piece;
 	Placement from, to;
+	
+	boolean isCheckmate = false;
 
 	public Move(Piece piece, Placement from, Placement to) {
 		this.piece = piece;
@@ -26,12 +28,16 @@ public abstract class Move {
 			throw new RuntimeException("to is not valid");
 	}
 
-	public abstract void doExecute(Board board) throws MoveException;
+	public abstract boolean doExecute(Board board) throws MoveException;
+
+	public boolean isCheckmate() {
+		return isCheckmate;
+	}
 
 	public void execute(Board board) throws MoveException {
 		isMoveInRange();
 
-		doExecute(board);
+		isCheckmate = doExecute(board);
 	}
 
 	private void isMoveInRange() throws MoveException {

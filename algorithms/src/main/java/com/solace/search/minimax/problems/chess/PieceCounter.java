@@ -29,6 +29,7 @@ public class PieceCounter {
 		initializeCountMap(board);
 	}
 
+	@SuppressWarnings("serial")
 	private void initializeCountMap(Board board) {
 		for (int r = 0; r < RANK_COUNT; r++) {
 			for (int f = 0; f < FILE_COUNT; f++) {
@@ -40,19 +41,18 @@ public class PieceCounter {
 
 				if (pieces.containsKey(player)) {
 					if (pieces.get(player).containsKey(piece)) {
-
-						pieces.get(player).get(piece).incrementAndGet();
+						int val = pieces.get(player).get(piece).incrementAndGet();
+						LOGGER.info(
+								"PieceCounter for {} {} incremented to {}",
+								player, piece, val);
 					} else {
-						LOGGER.warn(
-								"PieceCounter for {} {} does not exist, should not reach condition.",
+						pieces.get(player).put(piece, new AtomicInteger(1));
+						LOGGER.info(
+								"PieceCounter for {} {} initialized with a counter of 1",
 								player, piece);
 					}
 				} else {
-					pieces.put(player, new HashMap<GamePiece, AtomicInteger>() {
-						{
-							put(piece, new AtomicInteger(1));
-						}
-					});
+					pieces.put(player, new HashMap<GamePiece, AtomicInteger>());
 				}
 			}
 		}
