@@ -2,18 +2,23 @@ package com.solace.search.minimax.problems.chess.moves;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.solace.search.minimax.problems.chess.Board;
 import com.solace.search.minimax.problems.chess.BoardLocation;
+import com.solace.search.minimax.problems.chess.ChessConstants;
 import com.solace.search.minimax.problems.chess.GamePiece;
 import com.solace.search.minimax.problems.chess.Piece;
 import com.solace.search.minimax.problems.chess.Placement;
 import com.solace.search.minimax.problems.chess.Player;
 
 public abstract class Move {
-
+	
+	
 	Piece piece;
 	Placement from, to;
-	
+
 	boolean isCheckmate = false;
 
 	public Move(Piece piece, Placement from, Placement to) {
@@ -29,23 +34,29 @@ public abstract class Move {
 	}
 
 	public abstract boolean doExecute(Board board) throws MoveException;
+	
+	public abstract Logger getLogger();
 
 	public boolean isCheckmate() {
 		return isCheckmate;
 	}
 
 	public void execute(Board board) throws MoveException {
-		isMoveInRange();
-
-		isCheckmate = doExecute(board);
+		if (moveInRange())
+			isCheckmate = doExecute(board);
+		else
+			getLogger().info("to location was not valid.");
 	}
 
-	private void isMoveInRange() throws MoveException {
-		if (!(to.getBoardLocation().getFile() >= 0
-				&& to.getBoardLocation().getFile() < 8
-				&& to.getBoardLocation().getRank() >= 0 && to
-				.getBoardLocation().getRank() < 8))
-			throw new MoveException("To placement value is not within range");
+	private boolean moveInRange() {
+
+		if (to.getBoardLocation() == null)
+			return false;
+
+		return to.getBoardLocation().getFile() >= 0
+				&& to.getBoardLocation().getFile() < ChessConstants.FILE_COUNT
+				&& to.getBoardLocation().getRank() >= 0
+				&& to.getBoardLocation().getRank() < ChessConstants.RANK_COUNT;
 	}
 
 	public abstract boolean isCheck(Board board);
@@ -66,7 +77,7 @@ public abstract class Move {
 
 		return piece.getPiece() == GamePiece.King && piece.getPlayer() == p;
 	}
-	
+
 	public static List<BoardLocation> findValidMoves(Board board, Piece piece) {
 		return null;
 	}

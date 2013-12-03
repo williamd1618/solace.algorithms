@@ -38,6 +38,8 @@ public class PieceCounter {
 
 				if (piece == GamePiece.Empty)
 					continue;
+				
+				LOGGER.info("Evaluating a {} {}", player, piece);
 
 				if (pieces.containsKey(player)) {
 					if (pieces.get(player).containsKey(piece)) {
@@ -47,22 +49,29 @@ public class PieceCounter {
 								player, piece, val);
 					} else {
 						pieces.get(player).put(piece, new AtomicInteger(1));
+						
 						LOGGER.info(
 								"PieceCounter for {} {} initialized with a counter of 1",
 								player, piece);
 					}
 				} else {
 					pieces.put(player, new HashMap<GamePiece, AtomicInteger>());
+					
+					LOGGER.info(
+							"PieceCounter for {} {} initialized with a counter of 1",
+							player, piece);
+
+					pieces.get(player).put(piece, new AtomicInteger(1));
 				}
 			}
 		}
 	}
 
-	public void incr(Player player, Piece p) {
+	public void incr(Player player, GamePiece p) {
 		pieces.get(player).get(p).decrementAndGet();
 	}
 
-	public void decr(Player player, Piece p) {
+	public void decr(Player player, GamePiece p) {
 		pieces.get(player).get(p).decrementAndGet();
 	}
 }

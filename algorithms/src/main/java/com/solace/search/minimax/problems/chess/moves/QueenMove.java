@@ -272,4 +272,9 @@ public class QueenMove extends Move {
 
 		return isCheck;
 	}
+	
+	@Override
+	public Logger getLogger() {
+		return LOGGER;
+	}
 }

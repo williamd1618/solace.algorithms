@@ -19,7 +19,7 @@ public class ChessNode extends MiniMaxNode<State, ChessNode> {
 
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(ChessNode.class);
-	
+
 	boolean checkMateFound = false;
 
 	public ChessNode(Node<State> parent, State t) {
@@ -63,11 +63,11 @@ public class ChessNode extends MiniMaxNode<State, ChessNode> {
 				LOGGER.debug("Instantiated a {} to move {} from {} to {}", m
 						.getClass().getSimpleName(), p.getPiece(), p
 						.getLocation(), loc);
-				
+
 				m.execute(newBoard);
 
-//				newBoard.place(p, loc);
-				
+				// newBoard.place(p, loc);
+
 				checkMateFound = m.isCheckmate();
 
 				ChessNode node = new ChessNode(this, new State(newBoard,
@@ -131,10 +131,43 @@ public class ChessNode extends MiniMaxNode<State, ChessNode> {
 		return minValue;
 	}
 
+	/**
+	 * this implementation will be a bit redundant considering a similar
+	 * strategy will be employed in the {@link #generateAdjacency()} invocation.
+	 * In this structure what we are going to do is evaluated the current state
+	 * of the board to see if we can capture the opponents
+	 * {@link GamePiece#King}
+	 */
 	@Override
 	public boolean containsWin() {
-		// return getValue().getBoard()
-		return true;
+		// we want to get the active pieces for the current player who is
+		// about to move to see if it is a win
+		List<Piece> pieces = getValue().getActivePieces();
+
+		boolean checkMateFound = false;
+
+		for (Piece p : pieces) {
+			for (BoardLocation loc : p.factoryMoveEvaluator().evaluate(
+					getValue().getBoard(), p)) {
+				Board newBoard = new Board(getValue().getBoard());
+
+				Move m = factoryMove(p, loc);
+
+				LOGGER.debug(
+						"Evaluating current state of the board.  {} from {} to {}",
+						m.getClass().getSimpleName(), p.getPiece(),
+						p.getLocation(), loc);
+
+				m.execute(newBoard);
+
+				checkMateFound = m.isCheckmate();
+
+				if (checkMateFound)
+					break;
+			}
+		}
+
+		return checkMateFound;
 	}
 
 	private Move factoryMove(Piece piece, BoardLocation loc) {

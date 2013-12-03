@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.solace.search.minimax.problems.chess.moves.IValidMoveEvaluator;
 import com.solace.search.minimax.problems.chess.moves.Move;
 
 /**
@@ -204,11 +206,25 @@ public class Board {
 
 				piece.setLocation(BoardLocation.find(placement.getRank(),
 						placement.getFile()));
+
+				pieceLocations.get(piece.getPlayer()).add(piece);
+
+				if (piece.getPiece() == GamePiece.King)
+					updateKingLoc(piece);
+
 			} else {
 				LOGGER.info("placing a {} for {} at {}", piece.getPiece(),
 						piece.getPlayer(), placement);
 
 				board[placement.getRank()][placement.getFile()] = piece;
+
+				piece.setLocation(BoardLocation.find(placement.getRank(),
+						placement.getFile()));
+
+				pieceLocations.get(piece.getPlayer()).add(piece);
+
+				if (piece.getPiece() == GamePiece.King)
+					updateKingLoc(piece);
 			}
 		} else {
 			LOGGER.warn("placement was passed in as null");
@@ -218,12 +234,36 @@ public class Board {
 	}
 
 	/**
-	 * Contigent upon the orginal board being initialized to empty
+	 * 
+	 * @param piece
+	 */
+	private void updateKingLoc(Piece piece) {
+		if (piece.getPiece() != GamePiece.King)
+			throw new RuntimeException("not a King");
+
+		if (piece.getPlayer() == Player.White)
+			setWhiteKingPlacement(new Placement(piece, piece.getLocation()));
+		else
+			setBlackKingPlacement(new Placement(piece, piece.getLocation()));
+	}
+
+	/**
+	 * Will evaluate whether or not a board location has an element in it. Due
+	 * to the nature of the {@link IValidMoveEvaluator}s a BoardLocation could
+	 * be passed in as null if if the rank and file passed to
+	 * {@link BoardLocation#find(int, int)} is not a valid position, in which
+	 * case we return false.
 	 * 
 	 * @param placement
 	 * @return
 	 */
 	public boolean isOccupied(BoardLocation placement) {
+		if (placement == null)
+			return false;
+
+		if (board[placement.getRank()][placement.getFile()] == null)
+			return false;
+
 		return board[placement.getRank()][placement.getFile()].getPiece() != GamePiece.Empty;
 	}
 
@@ -239,19 +279,28 @@ public class Board {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		for (int r=7; r >= 0; r--) {
+		for (int r = 7; r >= 0; r--) {
 			sb.append("\n");
-			for (int f = 0; f<8; f++)
+			for (int f = 0; f < 8; f++)
 				sb.append("[").append(board[r][f]).append("]");
 		}
 
 		return sb.toString();
 	}
 
+	/**
+	 * will clear out the {@link #board} and the {@link #pieceLocations}
+	 */
 	public void clear() {
-		for (int r = 0; r < 8; r++) {			
+		for (int r = 0; r < 8; r++) {
 			for (int f = 0; f < 8; f++)
-				board[r][f] = new Piece(GamePiece.Empty,Player.All);				
+				board[r][f] = new Piece(GamePiece.Empty, Player.All);
+		}
+
+		// if we're clearing the table, clear out the piece location metamap
+		for (Entry<Player, List<Piece>> pos : this.getPieceLocations()
+				.entrySet()) {
+			pos.getValue().clear();
 		}
 	}
 }

@@ -1,5 +1,8 @@
 package com.solace.search.minimax.problems.chess.moves;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.solace.search.minimax.problems.chess.Board;
 import com.solace.search.minimax.problems.chess.GamePiece;
 import com.solace.search.minimax.problems.chess.Piece;
@@ -15,6 +18,8 @@ import com.solace.search.minimax.problems.chess.Player;
  * 
  */
 public class PawnMove extends Move {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(KingMove.class);
 
 	public PawnMove(Piece piece, Placement from, Placement to) {
 		super(piece, from, to);
@@ -29,7 +34,7 @@ public class PawnMove extends Move {
 	 */
 	@Override
 	public boolean doExecute(Board board) throws MoveException {
-		
+
 		boolean isMate = false;
 
 		if (from.getBoardLocation().getFile() == to.getBoardLocation()
@@ -52,10 +57,11 @@ public class PawnMove extends Move {
 			Player opponent = piece.getPlayer().getOpponent();
 
 			if (opponent.getFirstRankIndex() == to.getBoardLocation().getRank())
-				isMate = board.place(new Piece(GamePiece.Queen, piece.getPlayer()),
+				isMate = board.place(
+						new Piece(GamePiece.Queen, piece.getPlayer()),
 						to.getBoardLocation());
 		}
-		
+
 		return isMate;
 	}
 
@@ -77,8 +83,13 @@ public class PawnMove extends Move {
 					.getOpponent())
 					|| isKing(board, rank + 1, file - 1, piece.getPlayer()
 							.getOpponent());
-		} 
+		}
 
 		return isCheck;
+	}
+
+	@Override
+	public Logger getLogger() {
+		return LOGGER;
 	}
 }

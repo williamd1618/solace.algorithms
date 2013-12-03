@@ -15,6 +15,8 @@ public class KingMoveEvaluator implements IValidMoveEvaluator {
 		// TODO Auto-generated constructor stub
 	}
 
+	
+	
 	@Override
 	public List<BoardLocation> evaluate(Board board, Piece gamePiece) {
 		GamePiece piece = gamePiece.getPiece();
