@@ -56,6 +56,10 @@ public class ChessNode extends MiniMaxNode<State, ChessNode> {
 
 			for (BoardLocation loc : p.factoryMoveEvaluator().evaluate(
 					getValue().getBoard(), p)) {
+				
+				if ( loc == null )
+					continue;
+				
 				Board newBoard = new Board(getValue().getBoard());
 
 				Move m = factoryMove(p, loc);
@@ -64,11 +68,11 @@ public class ChessNode extends MiniMaxNode<State, ChessNode> {
 						.getClass().getSimpleName(), p.getPiece(), p
 						.getLocation(), loc);
 
-				m.execute(newBoard);
+				checkMateFound = m.execute(newBoard);
+				
+				LOGGER.debug("resulting board:\n{}", newBoard);
 
 				// newBoard.place(p, loc);
-
-				checkMateFound = m.isCheckmate();
 
 				ChessNode node = new ChessNode(this, new State(newBoard,
 						opponent, !getValue().isMax(), getDepth() - 1));
@@ -128,7 +132,9 @@ public class ChessNode extends MiniMaxNode<State, ChessNode> {
 				minValue = z;
 		}
 
-		return minValue;
+		// so that the closest pieces of all possible options
+		// has the highest H value
+		return -1 * minValue;
 	}
 
 	/**
@@ -154,12 +160,12 @@ public class ChessNode extends MiniMaxNode<State, ChessNode> {
 				Move m = factoryMove(p, loc);
 
 				LOGGER.debug(
-						"Evaluating current state of the board.  {} from {} to {}",
-						m.getClass().getSimpleName(), p.getPiece(),
+						"Evaluating current state of the board: move {} from {} to {}",
+						p.getPiece(),
 						p.getLocation(), loc);
 
 				m.execute(newBoard);
-
+				
 				checkMateFound = m.isCheckmate();
 
 				if (checkMateFound)

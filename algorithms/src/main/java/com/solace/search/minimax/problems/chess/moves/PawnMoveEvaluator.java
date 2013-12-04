@@ -37,26 +37,26 @@ public class PawnMoveEvaluator implements IValidMoveEvaluator {
 				current.getFile() + 1)))
 			potentials.add(BoardLocation.find(current.getRank(),
 					current.getFile() + 1));
-		else if (!board.isOccupied(BoardLocation.find(current.getRank(),
+		if (!board.isOccupied(BoardLocation.find(current.getRank(),
 				current.getFile() - 1)))
 			potentials.add(BoardLocation.find(current.getRank(),
 					current.getFile() - 1));
-		else if (board.isOccupiedByOpponent(BoardLocation.find(
+		if (board.isOccupiedByOpponent(BoardLocation.find(
 				current.getRank() + 1, current.getFile() - 1), p.getPlayer()
 				.getOpponent()))
 			potentials.add(BoardLocation.find(current.getRank() + 1,
 					current.getFile() - 1));
-		else if (board.isOccupiedByOpponent(BoardLocation.find(
+		if (board.isOccupiedByOpponent(BoardLocation.find(
 				current.getRank() + 1, current.getFile() + 1), p.getPlayer()
 				.getOpponent()))
 			potentials.add(BoardLocation.find(current.getRank() + 1,
 					current.getFile() + 1));
-		else if (board.isOccupiedByOpponent(BoardLocation.find(
+		if (board.isOccupiedByOpponent(BoardLocation.find(
 				current.getRank() - 1, current.getFile() - 1), p.getPlayer()
 				.getOpponent()))
 			potentials.add(BoardLocation.find(current.getRank() - 1,
 					current.getFile() - 1));
-		else if (board.isOccupiedByOpponent(BoardLocation.find(
+		if (board.isOccupiedByOpponent(BoardLocation.find(
 				current.getRank() - 1, current.getFile() + 1), p.getPlayer()
 				.getOpponent()))
 			potentials.add(BoardLocation.find(current.getRank() - 1,

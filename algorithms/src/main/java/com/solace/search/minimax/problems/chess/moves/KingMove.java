@@ -26,9 +26,11 @@ public class KingMove extends Move {
 	public boolean doExecute(Board board) throws MoveException {
 		
 		boolean isMate = false;
+		
+		setCurrentToEmpty(board);
 
 		isMate = board.place(piece, to.getBoardLocation());
-
+		
 		if (piece.getPlayer() == Player.White)
 			board.setWhiteKingPlacement(new Placement(Player.White,
 					GamePiece.King, to.getBoardLocation()));

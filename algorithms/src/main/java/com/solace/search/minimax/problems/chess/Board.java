@@ -115,7 +115,7 @@ public class Board {
 
 		pieceLocations.put(Player.Black, new ArrayList<Piece>());
 		pieceLocations.put(Player.White, new ArrayList<Piece>());
-
+	
 		// load the map of locations ot be easily accessed for when
 		// generated adjacency lists
 		for (int r = 0, f = 0; r < ChessConstants.RANK_COUNT
@@ -133,6 +133,9 @@ public class Board {
 	 */
 	public Board(Board board) {
 		this(board.getPieces());
+		
+		this.whiteKingPlacement = board.whiteKingPlacement;
+		this.blackKingPlacement = board.blackKingPlacement;
 	}
 
 	public Placement getWhiteKingPlacement() {
@@ -173,7 +176,7 @@ public class Board {
 	 * 
 	 * @param piece
 	 * @param placement
-	 * @return will return true only if the move produces a checkmate
+	 * @return will return true only if the move produces a check mate
 	 */
 	public boolean place(Piece piece, BoardLocation placement) {
 		boolean checkmate = false;
@@ -206,6 +209,8 @@ public class Board {
 
 				piece.setLocation(BoardLocation.find(placement.getRank(),
 						placement.getFile()));
+				
+				assert pieceLocations != null;
 
 				pieceLocations.get(piece.getPlayer()).add(piece);
 
@@ -267,7 +272,19 @@ public class Board {
 		return board[placement.getRank()][placement.getFile()].getPiece() != GamePiece.Empty;
 	}
 
+	/**
+	 * Will return if position in {@link Placement} is null or not as the
+	 * {@link BoardLocation#find(int, int)} will return null if the rank or file
+	 * is not valid.
+	 * 
+	 * @param placement
+	 * @param opponent
+	 * @return
+	 */
 	public boolean isOccupiedByOpponent(BoardLocation placement, Player opponent) {
+		if (placement == null)
+			return false;
+
 		return board[placement.getRank()][placement.getFile()].getPiece() != GamePiece.Empty
 				&& board[placement.getRank()][placement.getFile()].getPlayer() == opponent;
 	}

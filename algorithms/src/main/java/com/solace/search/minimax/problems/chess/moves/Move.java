@@ -14,8 +14,7 @@ import com.solace.search.minimax.problems.chess.Placement;
 import com.solace.search.minimax.problems.chess.Player;
 
 public abstract class Move {
-	
-	
+
 	Piece piece;
 	Placement from, to;
 
@@ -34,18 +33,31 @@ public abstract class Move {
 	}
 
 	public abstract boolean doExecute(Board board) throws MoveException;
-	
+
 	public abstract Logger getLogger();
 
 	public boolean isCheckmate() {
 		return isCheckmate;
 	}
 
-	public void execute(Board board) throws MoveException {
+	/**
+	 * Will execute a move and return true of false if the effect of the move
+	 * was a check mate.
+	 * 
+	 * @param board
+	 * @return
+	 * @throws MoveException
+	 */
+	public boolean execute(Board board) throws MoveException {
+
 		if (moveInRange())
 			isCheckmate = doExecute(board);
 		else
 			getLogger().info("to location was not valid.");
+
+		getLogger().debug("\n{}", board.toString());
+
+		return isCheckmate;
 	}
 
 	private boolean moveInRange() {
@@ -76,6 +88,12 @@ public abstract class Move {
 		Piece piece = board.getPieces()[rank][file];
 
 		return piece.getPiece() == GamePiece.King && piece.getPlayer() == p;
+	}
+
+	public void setCurrentToEmpty(Board board) {
+		getLogger().info("setting {} at {} to empty.", piece,
+				piece.getLocation());
+		board.place(new Piece(GamePiece.Empty, Player.All), piece.getLocation());
 	}
 
 	public static List<BoardLocation> findValidMoves(Board board, Piece piece) {
