@@ -115,7 +115,7 @@ public class Board {
 
 		pieceLocations.put(Player.Black, new ArrayList<Piece>());
 		pieceLocations.put(Player.White, new ArrayList<Piece>());
-	
+
 		// load the map of locations ot be easily accessed for when
 		// generated adjacency lists
 		for (int r = 0, f = 0; r < ChessConstants.RANK_COUNT
@@ -133,7 +133,7 @@ public class Board {
 	 */
 	public Board(Board board) {
 		this(board.getPieces());
-		
+
 		this.whiteKingPlacement = board.whiteKingPlacement;
 		this.blackKingPlacement = board.blackKingPlacement;
 	}
@@ -181,9 +181,13 @@ public class Board {
 	public boolean place(Piece piece, BoardLocation placement) {
 		boolean checkmate = false;
 
+		if (piece.getPlayer() == Player.All) {
+			board[placement.getRank()][placement.getFile()] = piece;
+			return false;
+		}
+
 		if (placement != null) {
-			Player opponent = piece.getPlayer() == Player.White ? Player.Black
-					: Player.White;
+			Player opponent = piece.getPlayer().getOpponent();
 
 			Piece target = board[placement.getRank()][placement.getFile()];
 
@@ -199,6 +203,8 @@ public class Board {
 
 				pieceLocations.get(opponent).remove(target);
 
+				emptySpace(piece, placement);
+
 				if (target.getPiece() == GamePiece.King) {
 					LOGGER.info("checkmate identified for {}",
 							piece.getPlayer());
@@ -209,8 +215,6 @@ public class Board {
 
 				piece.setLocation(BoardLocation.find(placement.getRank(),
 						placement.getFile()));
-				
-				assert pieceLocations != null;
 
 				pieceLocations.get(piece.getPlayer()).add(piece);
 
@@ -222,6 +226,8 @@ public class Board {
 						piece.getPlayer(), placement);
 
 				board[placement.getRank()][placement.getFile()] = piece;
+
+				emptySpace(piece, placement);
 
 				piece.setLocation(BoardLocation.find(placement.getRank(),
 						placement.getFile()));
@@ -318,6 +324,14 @@ public class Board {
 		for (Entry<Player, List<Piece>> pos : this.getPieceLocations()
 				.entrySet()) {
 			pos.getValue().clear();
+		}
+	}
+
+	private void emptySpace(Piece piece, BoardLocation pl) {
+
+		if (piece.getLocation() != pl) {
+			board[piece.getLocation().getRank()][piece.getLocation().getFile()] = Piece.EMPTY_PIECE;
+			pieceLocations.get(piece.getPlayer()).remove(piece);
 		}
 	}
 }

@@ -39,9 +39,12 @@ public class MiniMaxSearch<T, NodeType extends MiniMaxNode<T, NodeType>>
 		return minimax(startState, depth, true);
 	}
 
-	private NodeType minimax(NodeType node, int depth, boolean maximizing) {		
-		LOGGER.info("{}Initiating minimax search as {} with a depth of {}{}", Strings.repeat("=", 10),
-				maximizing ? "MAX" : "MIN", depth, Strings.repeat("=", 10));
+	private NodeType minimax(NodeType node, int depth, boolean maximizing) {
+		LOGGER.info("{}Initiating minimax search as {} with a depth of {}{}",
+				Strings.repeat("=", 10), maximizing ? "MAX" : "MIN", depth,
+				Strings.repeat("=", 10));
+
+		NodeType result = node;
 
 		if (depth == 0 || node.containsWin())
 			return node;
@@ -52,11 +55,14 @@ public class MiniMaxSearch<T, NodeType extends MiniMaxNode<T, NodeType>>
 			for (NodeType child : node.generateAdjacency().getNeighbors()) {
 				NodeType val = minimax(child, depth - 1, false);
 
+				result = child;
+
 				best = (int) (best > val.calculateCost() ? best : val
 						.calculateCost());
 
 				if (best <= val.getAlpha()) {
-					LOGGER.info("beta cutoff identified for \n{}", val.getValue().toString());
+					LOGGER.info("beta cutoff identified for \n{}", val
+							.getValue().toString());
 					break;
 				}
 			}
@@ -67,6 +73,8 @@ public class MiniMaxSearch<T, NodeType extends MiniMaxNode<T, NodeType>>
 
 			for (NodeType child : node.generateAdjacency().getNeighbors()) {
 				NodeType val = minimax(child, depth - 1, true);
+
+				result = child;
 
 				best = (int) (best < val.calculateCost() ? best : val
 						.calculateCost());
@@ -80,6 +88,9 @@ public class MiniMaxSearch<T, NodeType extends MiniMaxNode<T, NodeType>>
 			node.setAlpha(best);
 		}
 
-		return node;
+		LOGGER.info("A result was identified with a value of {}.",
+				node.getAlpha());
+
+		return result;
 	}
 }

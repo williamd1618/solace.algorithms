@@ -1,9 +1,7 @@
 package com.solace.algorithms.search.minimax;
 
-import com.solace.graph.Adjacency;
 import com.solace.graph.AdjacencyGenerator;
 import com.solace.graph.Node;
-import com.solace.search.minimax.problems.tictactoe.Board.Piece;
 
 public abstract class MiniMaxNode<ValueType, NodeType extends Node<ValueType>> extends
 		Node<ValueType> implements AdjacencyGenerator<ValueType, NodeType>,

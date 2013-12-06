@@ -43,7 +43,7 @@ public class ChessNode extends MiniMaxNode<State, ChessNode> {
 	 */
 	public Adjacency<State, ChessNode> generateAdjacency() {
 
-		Player opponent = getValue().getPlayer().getOpponent();
+		Player opponent = getValue().getPlayer()/* .getOpponent() */;
 
 		Adjacency<State, ChessNode> adjacency = new Adjacency<State, ChessNode>(
 				this);
@@ -54,12 +54,14 @@ public class ChessNode extends MiniMaxNode<State, ChessNode> {
 
 		for (Piece p : pieces) {
 
-			for (BoardLocation loc : p.factoryMoveEvaluator().evaluate(
-					getValue().getBoard(), p)) {
-				
-				if ( loc == null )
+			List<BoardLocation> locations = p.factoryMoveEvaluator().evaluate(
+					new Board(getValue().getBoard()), p);
+
+			for (BoardLocation loc : locations) {
+
+				if (loc == null)
 					continue;
-				
+
 				Board newBoard = new Board(getValue().getBoard());
 
 				Move m = factoryMove(p, loc);
@@ -69,7 +71,7 @@ public class ChessNode extends MiniMaxNode<State, ChessNode> {
 						.getLocation(), loc);
 
 				checkMateFound = m.execute(newBoard);
-				
+
 				LOGGER.debug("resulting board:\n{}", newBoard);
 
 				// newBoard.place(p, loc);
@@ -140,7 +142,7 @@ public class ChessNode extends MiniMaxNode<State, ChessNode> {
 	/**
 	 * this implementation will be a bit redundant considering a similar
 	 * strategy will be employed in the {@link #generateAdjacency()} invocation.
-	 * In this structure what we are going to do is evaluated the current state
+	 * In this structure what we are going to do is evaluating the current state
 	 * of the board to see if we can capture the opponents
 	 * {@link GamePiece#King}
 	 */
@@ -153,20 +155,21 @@ public class ChessNode extends MiniMaxNode<State, ChessNode> {
 		boolean checkMateFound = false;
 
 		for (Piece p : pieces) {
+			
 			for (BoardLocation loc : p.factoryMoveEvaluator().evaluate(
-					getValue().getBoard(), p)) {
+					new Board(getValue().getBoard()), p)) {
+
+				// cloning the board so as to not change the actual
+				// board
 				Board newBoard = new Board(getValue().getBoard());
 
-				Move m = factoryMove(p, loc);
+				Move m = factoryMove(new Piece(p), loc);
 
 				LOGGER.debug(
 						"Evaluating current state of the board: move {} from {} to {}",
-						p.getPiece(),
-						p.getLocation(), loc);
+						p.getPiece(), p.getLocation(), loc);
 
-				m.execute(newBoard);
-				
-				checkMateFound = m.isCheckmate();
+				checkMateFound = m.execute(newBoard);
 
 				if (checkMateFound)
 					break;
@@ -177,18 +180,34 @@ public class ChessNode extends MiniMaxNode<State, ChessNode> {
 	}
 
 	private Move factoryMove(Piece piece, BoardLocation loc) {
-		if (piece.getPiece() == GamePiece.Pawn)
-			return new PawnMove(piece,
-					new Placement(piece, piece.getLocation()), new Placement(
-							piece, loc));
-		else if (piece.getPiece() == GamePiece.King)
-			return new KingMove(piece,
-					new Placement(piece, piece.getLocation()), new Placement(
-							piece, loc));
-		else if (piece.getPiece() == GamePiece.Queen)
-			return new QueenMove(piece, new Placement(piece,
-					piece.getLocation()), new Placement(piece, loc));
+		Move m = null;
+		Piece clone = new Piece(piece);
+		if (clone.getPiece() == GamePiece.Pawn)
+			m = new PawnMove(clone, new Placement(clone, clone.getLocation()),
+					new Placement(clone, loc));
+		else if (clone.getPiece() == GamePiece.King)
+			m = new KingMove(clone, new Placement(clone, clone.getLocation()),
+					new Placement(clone, loc));
+		else if (clone.getPiece() == GamePiece.Queen)
+			m = new QueenMove(piece, new Placement(clone, clone.getLocation()),
+					new Placement(clone, loc));
 		else
-			return null;
+			assert false;
+
+		return m;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder("\n");
+		sb.append(getValue().getBoard().toString()).append("\n");
+		sb.append("Player: ").append(getValue().getPlayer()).append("\n");
+		sb.append("Value: ").append(getAlpha()).append("\n");
+
+		return sb.toString();
+	}
+
+	public boolean isCheckMateFound() {
+		return checkMateFound;
 	}
 }

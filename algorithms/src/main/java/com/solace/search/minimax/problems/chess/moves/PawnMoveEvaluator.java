@@ -33,14 +33,22 @@ public class PawnMoveEvaluator implements IValidMoveEvaluator {
 
 		List<BoardLocation> potentials = new ArrayList<BoardLocation>();
 
-		if (!board.isOccupied(BoardLocation.find(current.getRank(),
-				current.getFile() + 1)))
-			potentials.add(BoardLocation.find(current.getRank(),
-					current.getFile() + 1));
-		if (!board.isOccupied(BoardLocation.find(current.getRank(),
-				current.getFile() - 1)))
-			potentials.add(BoardLocation.find(current.getRank(),
-					current.getFile() - 1));
+		// if (!board.isOccupied(BoardLocation.find(current.getRank(),
+		// current.getFile() + 1)))
+		// potentials.add(BoardLocation.find(current.getRank(),
+		// current.getFile() + 1));
+		// if (!board.isOccupied(BoardLocation.find(current.getRank(),
+		// current.getFile() - 1)))
+		// potentials.add(BoardLocation.find(current.getRank(),
+		// current.getFile() - 1));
+		if (!board.isOccupied(BoardLocation.find(current.getRank() - 1,
+				current.getFile())))
+			potentials.add(BoardLocation.find(current.getRank() - 1,
+					current.getFile()));
+		if (!board.isOccupied(BoardLocation.find(current.getRank() + 1,
+				current.getFile())))
+			potentials.add(BoardLocation.find(current.getRank() + 1,
+					current.getFile()));
 		if (board.isOccupiedByOpponent(BoardLocation.find(
 				current.getRank() + 1, current.getFile() - 1), p.getPlayer()
 				.getOpponent()))
